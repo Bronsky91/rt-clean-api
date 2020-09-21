@@ -18,10 +18,10 @@ const makeDb = () => {
     });
     return {
       query(sql: any) {
-        return promisify(connection.query).call(connection, sql);
+        return promisify(connection.query).call(connection, sql) as any;
       },
       close() {
-        return promisify(connection.end).call(connection);
+        return promisify(connection.end).call(connection) as any;
       },
     };
   };

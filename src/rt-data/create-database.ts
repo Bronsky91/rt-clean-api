@@ -7,7 +7,7 @@ export const createDatabase = async (database: string, filePath: string) => {
   const host = "127.0.0.1";
   const user = "root";
   const password = "friend91";
-  // const database = 'rtbackup'
+
   const makeCon = () => {
     const connection: Connection = createConnection({
       host,
@@ -31,7 +31,6 @@ export const createDatabase = async (database: string, filePath: string) => {
       password,
       database,
     });
-    console.log(connection.state)
     return {
       query(sql: any) {
         return promisify(connection.query).call(connection, sql);
