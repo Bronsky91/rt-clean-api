@@ -1,6 +1,8 @@
 import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
 
+//! If the db.close() fails the database doesn't exist
+
 export const connectToDatabase = async (database: string) => {
   // Creates a DB based on a Redtail CRM Backup
   const host = "127.0.0.1";

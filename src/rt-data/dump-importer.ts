@@ -8,8 +8,6 @@ export const dumpImporter = (
   filePath: string
 ) => {
   const importer = new Importer({ host, user, password, database });
-  console.log(importer)
-  console.log(filePath)
   return importer
     .import(filePath)
     .then(() => {

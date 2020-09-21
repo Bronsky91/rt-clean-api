@@ -17,15 +17,21 @@ const userDao = new UserDao();
 router.post("/backup-upload", async (req: Request, res: Response) => {
   if(req.files) {
     // TODO: Base database name on unique User data
-    const databaseName = 'rtbackup10'
+    const databaseName = 'rtbackup11'
     const filePath = `./tmp-backups/${databaseName}.sql`
     await req.files.backup.mv(filePath)
 
-    const db = await createDatabase(databaseName, filePath);
-    // const test = await connectToDatabase(databaseName);
-    console.log(await db.query("SHOW TABLES"))
-    res.statusCode = 200;
-    res.json({ databaseName });
+    
+    // const db = await connectToDatabase(databaseName);
+    try{
+      // TODO: With larger databases this await won't fly
+      await createDatabase(databaseName, filePath);
+
+      res.json({ databaseName });
+    } catch(e) {
+      res.json({fail: true})
+    }
+
   }
 });
 
