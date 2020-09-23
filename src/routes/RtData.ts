@@ -4,12 +4,10 @@ import { createDatabase } from '../rt-data/create-database'
 import { connectToDatabase } from '../rt-data/connect-to-database'
 import path from 'path'
 
-import UserDao from "@daos/User/UserDao.mock";
 import { RedtailContact } from 'src/interfaces/redtail.interface';
 
 // Init shared
 const router = Router();
-const userDao = new UserDao();
 
 /******************************************************************************
  *          Upload RT Database Backup File - "POST /api/rt/backup-upload"
@@ -22,7 +20,6 @@ router.post("/backup-upload", async (req: Request, res: Response) => {
     const filePath = `./tmp-backups/${databaseName}.sql`
     await req.files.backup.mv(filePath)
 
-    // TODO: With larger databases this probably won't fly
     createDatabase(databaseName, filePath)
 
     res.json({ databaseName })
@@ -58,7 +55,7 @@ router.get("/get-contacts", async (req: Request, res: Response) => {
 router.post("/contact-submit", async (req: Request, res: Response) => {
   res.statusCode = 200;
   // TODO: Update new database (for spreadsheet purposes)
-  // TODO: Update Contact within Redtail
+  // TODO: Update Contact within Redtail if Auth is setup
   console.log(req.body);
   res.end();
 })

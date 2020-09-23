@@ -4,6 +4,7 @@ import path from 'path';
 import helmet from 'helmet';
 import fileUpload from 'express-fileupload'
 import cors from 'cors'
+import mongoose from 'mongoose'
 
 import express, { Request, Response, NextFunction } from 'express';
 import { StatusCodes } from 'http-status-codes';
@@ -11,12 +12,11 @@ import 'express-async-errors';
 
 import BaseRouter from './routes';
 import logger from '@shared/Logger';
+import { MONGO_URL } from '@shared/constants';
 
 
 // Init express
 const app = express();
-
-
 
 /************************************************************************************
  *                              Set basic express settings
@@ -55,6 +55,8 @@ app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
     });
 });
 
+// Connect to Mongoose
+mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true });
 
 // Export express instance
 export default app;
