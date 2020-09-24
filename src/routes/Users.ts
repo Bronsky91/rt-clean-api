@@ -6,6 +6,7 @@ import { paramMissingError } from "@shared/constants";
 import UserModel, { IUser } from "src/models/User.model";
 import passport from "passport";
 import { GoogleProfile, GoogleUser } from "src/interfaces/google.interface";
+import { createDatabaseName } from "../shared/utils/createDatabaseName";
 // Init shared
 const router = Router();
 
@@ -14,7 +15,8 @@ const router = Router();
  ******************************************************************************/
 
 router.get("/all", async (req: Request, res: Response) => {
-  const users = await UserModel.find();
+  // const users = await UserModel.find();
+  const users = await createDatabaseName("Reed");
   return res.status(OK).json({ users });
 });
 

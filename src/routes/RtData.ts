@@ -1,10 +1,8 @@
 import { Request, Response, Router } from "express";
-import { StatusCodes } from "http-status-codes";
-import { createDatabase } from '../rt-data/create-database'
-import { connectToDatabase } from '../rt-data/connect-to-database'
-import path from 'path'
-
-import { RedtailContact } from 'src/interfaces/redtail.interface';
+import { createDatabase } from "../rt-data/create-database";
+import { connectToDatabase } from "../rt-data/connect-to-database";
+import { createDatabaseName } from "../shared/utils/createDatabaseName";
+import { RedtailContact } from "src/interfaces/redtail.interface";
 
 // Init shared
 const router = Router();
@@ -14,15 +12,18 @@ const router = Router();
  ******************************************************************************/
 
 router.post("/backup-upload", async (req: Request, res: Response) => {
-  if(req.files) {
-    // TODO: Base database name on unique User data
-    const databaseName = 'rtbackup12'
-    const filePath = `./tmp-backups/${databaseName}.sql`
-    await req.files.backup.mv(filePath)
+  if (req.files) {
+    //! Last name placeholder:
+    const lastName = "r" + Math.random().toString(36).substr(2, 9);
+    // TODO: Use user last name from JWT
+    const databaseName = await createDatabaseName(lastName);
+    // TODO: Save databaseName to user
+    const filePath = `./tmp-backups/${databaseName}.sql`;
+    await req.files.backup.mv(filePath);
 
-    createDatabase(databaseName, filePath)
+    createDatabase(databaseName, filePath);
 
-    res.json({ databaseName })
+    res.json({ databaseName });
   }
 });
 
@@ -32,7 +33,9 @@ router.post("/backup-upload", async (req: Request, res: Response) => {
 
 router.post("/get-contact", async (req: Request, res: Response) => {
   const db = await connectToDatabase("rtbackup12");
-  const contact: RedtailContact[] = await db.query(`SELECT * FROM contacts WHERE id = ${req.body.id}`);
+  const contact: RedtailContact[] = await db.query(
+    `SELECT * FROM contacts WHERE id = ${req.body.id}`
+  );
   db.close();
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
@@ -49,8 +52,8 @@ router.get("/get-contacts", async (req: Request, res: Response) => {
   db.close();
   res.statusCode = 200;
   res.setHeader("Content-Type", "application/json");
-  res.json({contacts});
-})
+  res.json({ contacts });
+});
 
 router.post("/contact-submit", async (req: Request, res: Response) => {
   res.statusCode = 200;
@@ -58,8 +61,7 @@ router.post("/contact-submit", async (req: Request, res: Response) => {
   // TODO: Update Contact within Redtail if Auth is setup
   console.log(req.body);
   res.end();
-})
-
+});
 
 /******************************************************************************
  *                                     Export
