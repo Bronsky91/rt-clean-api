@@ -32,6 +32,7 @@ router.post("/backup-upload", async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.post("/get-contact", async (req: Request, res: Response) => {
+  // TODO: Get Database name from User - JWT
   const db = await connectToDatabase("rtbackup12");
   const contact: RedtailContact[] = await db.query(
     `SELECT * FROM contacts WHERE id = ${req.body.id}`
@@ -47,6 +48,7 @@ router.post("/get-contact", async (req: Request, res: Response) => {
  ******************************************************************************/
 
 router.get("/get-contacts", async (req: Request, res: Response) => {
+  // TODO: Get Database name from User - JWT
   const db = await connectToDatabase("rtbackup12");
   const contacts: RedtailContact[] = await db.query(`SELECT * FROM contacts`);
   db.close();

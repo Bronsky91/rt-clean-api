@@ -1,18 +1,20 @@
+import {
+  MY_SQL_HOST,
+  MY_SQL_USER,
+  MY_SQL_PASSWORD,
+} from "@shared/constants";
 import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
 import { dumpImporter } from "./dump-importer";
 
 export const createDatabase = async (database: string, filePath: string) => {
   // Creates a DB based on a Redtail CRM Backup
-  const host = "127.0.0.1";
-  const user = "root";
-  const password = "friend91";
 
   const makeCon = () => {
     const connection: Connection = createConnection({
-      host,
-      user,
-      password,
+      host: MY_SQL_HOST,
+      user: MY_SQL_USER,
+      password: MY_SQL_PASSWORD,
     });
     return {
       query(sql: any) {
@@ -26,9 +28,9 @@ export const createDatabase = async (database: string, filePath: string) => {
 
   const makeDb = () => {
     const connection: Connection = createConnection({
-      host,
-      user,
-      password,
+      host: MY_SQL_HOST,
+      user: MY_SQL_USER,
+      password: MY_SQL_PASSWORD,
       database,
     });
     return {
@@ -42,7 +44,14 @@ export const createDatabase = async (database: string, filePath: string) => {
   };
   const con = makeCon();
   await con.query(`CREATE DATABASE ${database}`);
-  await dumpImporter(host, user, password, database, filePath);
+  await dumpImporter(
+    MY_SQL_HOST,
+    // MY_SQL_PORT,
+    MY_SQL_USER,
+    MY_SQL_PASSWORD,
+    database,
+    filePath
+  );
 
   const db = makeDb();
 

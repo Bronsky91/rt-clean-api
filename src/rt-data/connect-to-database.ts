@@ -1,3 +1,8 @@
+import {
+  MY_SQL_HOST,
+  MY_SQL_PASSWORD,
+  MY_SQL_USER,
+} from "@shared/constants";
 import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
 
@@ -5,15 +10,12 @@ import { promisify } from "util";
 
 export const connectToDatabase = async (database: string) => {
   // Creates a DB based on a Redtail CRM Backup
-  const host = "127.0.0.1";
-  const user = "root";
-  const password = "friend91";
 
-const makeDb = () => {
+  const makeDb = () => {
     const connection: Connection = createConnection({
-      host,
-      user,
-      password,
+      host: MY_SQL_HOST,
+      user: MY_SQL_USER,
+      password: MY_SQL_PASSWORD,
       database,
     });
     return {
