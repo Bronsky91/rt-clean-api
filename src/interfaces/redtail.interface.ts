@@ -32,4 +32,3 @@ export interface RedtailContact {
     updated_at: Date;
     temp_id?: any;
   }
-  

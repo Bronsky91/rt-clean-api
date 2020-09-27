@@ -24,7 +24,6 @@ router.post(
       await req.files.backup.mv(filePath);
 
       createDatabase(databaseName, filePath);
-      UserModel.updateOne({ email: user.email }, { databaseName });
 
       res.json({ databaseName });
     }

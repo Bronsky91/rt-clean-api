@@ -9,7 +9,9 @@ import {
 import UserModel, { IUser } from "src/models/User.model";
 import { GoogleUser } from "src/interfaces/google.interface";
 import { findOrCreateGoogleUser } from "../shared/utils/findOrCreateGoogleUser";
-import { signToken } from "@shared/utils/tokenAuth";
+import { isTokenAuth, signToken } from "@shared/utils/tokenAuth";
+import { authRedtail } from "src/rt-api/auth";
+import { AxiosResponse } from "axios";
 // Init shared
 const router = Router();
 
@@ -23,21 +25,32 @@ router.get("/all", async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *                       Add One - "POST /api/users/add"
+ *     Updates User with Redtail Userkey - "POST /api/users/redtail-auth
  ******************************************************************************/
 
-router.post("/add", async (req: Request, res: Response) => {
-  const { user } = req.body;
-  if (!user) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      error: paramMissingError,
-    });
+router.post(
+  "/redtail-auth",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const { username, password } = req.body.data;
+
+    const authStatus = await authRedtail(username, password)
+      .then((rtResponse) => {
+        const rtUserkey = rtResponse.data["UserKey"];
+
+        UserModel.updateOne(
+          { email: user.email },
+          { $set: { rtUserkey } }
+        ).exec();
+
+        return rtResponse.status;
+      })
+      .catch((rt) => rt.response.status);
+
+    res.status(authStatus).end();
   }
-
-  await UserModel.create(user);
-
-  return res.status(StatusCodes.CREATED).end();
-});
+);
 
 router.get(
   "/auth",
