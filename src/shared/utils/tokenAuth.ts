@@ -16,6 +16,7 @@ export const isTokenAuth = (
       req.user = user;
       next();
     } else {
+      // TODO: Redirects not working, just sending 401 error code
       res.redirect(CLIENT_LOGIN_PAGE_URL, 401);
     }
   } else {
@@ -25,7 +26,7 @@ export const isTokenAuth = (
 
 export const signToken = (user: IUser) => {
   return jwt.sign({ data: user }, JWT_SECRET, {
-    expiresIn: 604800,
+    expiresIn: 3600000, // 1 hour
   });
 };
 
