@@ -17,7 +17,7 @@ const UserSchema: Schema = new Schema({
   provider: { type: String, required: false },
   providerId: { type: String, required: false },
   displayName: { type: String, required: false },
-  databaseName: { type: String, required: false, unique: true },
+  databaseName: { type: String, required: false, unique: true, sparse: true },
 });
 
 // Export the model and return your IUser interface

@@ -15,8 +15,7 @@ const router = Router();
  ******************************************************************************/
 
 router.get("/all", async (req: Request, res: Response) => {
-  // const users = await UserModel.find();
-  const users = await createDatabaseName("Reed");
+  const users: IUser[] = await UserModel.find();
   return res.status(OK).json({ users });
 });
 
@@ -45,9 +44,8 @@ router.get(
   async (req: Request, res: Response) => {
     const { profile } = req.user as GoogleUser;
     const user: IUser | null = await UserModel.findOne({
-      where: { providerId: profile.id },
+      providerId: profile.id,
     });
-
     if (user) {
       //TODO: Do something with User
     } else {
