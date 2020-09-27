@@ -9,3 +9,5 @@ export const GOOGLE_REDIRECT_URL = process.env.GOOGLE_REDIRECT_URL || "";
 export const MY_SQL_HOST = process.env.MY_SQL_HOST || "";
 export const MY_SQL_USER = process.env.MY_SQL_USER || "";
 export const MY_SQL_PASSWORD = process.env.MY_SQL_PASSWORD || "";
+
+export const CLIENT_HOME_PAGE_URL = "http://localhost:3000/upload";

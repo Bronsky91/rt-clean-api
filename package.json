@@ -25,6 +25,7 @@
     "@server": "dist/Server"
   },
   "dependencies": {
+    "@types/cookie-session": "^2.0.41",
     "@types/cors": "^2.8.7",
     "@types/express-fileupload": "^1.1.5",
     "@types/mongoose": "^5.7.36",
@@ -33,6 +34,7 @@
     "@types/passport-google-oauth": "^1.0.41",
     "command-line-args": "^5.1.1",
     "cookie-parser": "^1.4.5",
+    "cookie-session": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^8.2.0",
     "exceljs": "^4.1.1",

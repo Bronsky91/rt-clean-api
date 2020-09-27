@@ -15,6 +15,7 @@ import logger from "@shared/Logger";
 import { MONGO_URL } from "@shared/constants";
 import auth from "./shared/auth";
 import passport from "passport";
+import cookieSession from "cookie-session";
 
 // Init express
 const app = express();
@@ -24,6 +25,7 @@ const app = express();
  ***********************************************************************************/
 
 app.use(passport.initialize());
+app.use(passport.session()); // Used to persist login sessions
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -34,6 +36,13 @@ app.use(
     safeFileNames: true,
     // tempFileDir : './src/tmp-backups/',
     preserveExtension: true,
+  })
+);
+// cookieSession config
+app.use(
+  cookieSession({
+    maxAge: 24 * 60 * 60 * 1000, // One day in milliseconds
+    keys: ["funeveryday"], // TODO: Make random string
   })
 );
 app.use(cors());

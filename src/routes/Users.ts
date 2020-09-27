@@ -2,7 +2,7 @@ import { Request, Response, Router } from "express";
 import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
 import { ParamsDictionary } from "express-serve-static-core";
 
-import { paramMissingError } from "@shared/constants";
+import { CLIENT_HOME_PAGE_URL, paramMissingError } from "@shared/constants";
 import UserModel, { IUser } from "src/models/User.model";
 import passport from "passport";
 import { GoogleProfile, GoogleUser } from "src/interfaces/google.interface";
@@ -39,33 +39,9 @@ router.post("/add", async (req: Request, res: Response) => {
 router.get(
   "/auth",
   passport.authenticate("google", {
-    failureRedirect: "/", // TODO: Update Failure redirect
-  }),
-  async (req: Request, res: Response) => {
-    const { profile } = req.user as GoogleUser;
-    const user: IUser | null = await UserModel.findOne({
-      providerId: profile.id,
-    });
-    if (user) {
-      //TODO: Do something with User
-    } else {
-      const verifiedEmail =
-        profile.emails.find((email: any) => email.verified) ||
-        profile.emails[0];
-
-      //TODO: Do something with created User
-      const createdUser = await UserModel.create({
-        provider: profile.provider,
-        providerId: profile.id,
-        firstName: profile.name.givenName,
-        lastName: profile.name.familyName,
-        displayName: profile.displayName,
-        email: verifiedEmail.value,
-      });
-    }
-
-    res.redirect(`http://localhost:3000/`);
-  }
+    successRedirect: CLIENT_HOME_PAGE_URL,
+    failureRedirect: "http://localhost:3000/", // TODO: Update Failure redirect
+  })
 );
 
 /******************************************************************************
