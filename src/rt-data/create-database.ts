@@ -1,8 +1,4 @@
-import {
-  MY_SQL_HOST,
-  MY_SQL_USER,
-  MY_SQL_PASSWORD,
-} from "@shared/constants";
+import { MY_SQL_HOST, MY_SQL_USER, MY_SQL_PASSWORD } from "@shared/constants";
 import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
 import { dumpImporter } from "./dump-importer";

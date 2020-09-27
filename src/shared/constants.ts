@@ -11,3 +11,6 @@ export const MY_SQL_USER = process.env.MY_SQL_USER || "";
 export const MY_SQL_PASSWORD = process.env.MY_SQL_PASSWORD || "";
 
 export const CLIENT_HOME_PAGE_URL = "http://localhost:3000/upload";
+export const CLIENT_LOGIN_PAGE_URL = "http://localhost:3000/";
+
+export const JWT_SECRET = process.env.JWT_SECRET as string;

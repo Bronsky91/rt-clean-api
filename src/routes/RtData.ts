@@ -1,9 +1,9 @@
 import { Request, Response, Router } from "express";
 import { createDatabase } from "../rt-data/create-database";
 import { connectToDatabase } from "../rt-data/connect-to-database";
-import { createDatabaseName } from "../shared/utils/createDatabaseName";
 import { RedtailContact } from "src/interfaces/redtail.interface";
-import passport from "passport";
+import { isTokenAuth } from "@shared/utils/tokenAuth";
+import UserModel, { IUser } from "src/models/User.model";
 
 // Init shared
 const router = Router();
@@ -12,62 +12,77 @@ const router = Router();
  *          Upload RT Database Backup File - "POST /api/rt/backup-upload"
  ******************************************************************************/
 
-router.post("/backup-upload", async (req: Request, res: Response) => {
-  if (req.files) {
-    //! Last name placeholder:
-    // const lastName = "r" + Math.random().toString(36).substr(2, 9);
-    // TODO: Use user last name from JWT
-    // const databaseName = await createDatabaseName(lastName);
-    const databaseName = "rtbackup12";
-    // TODO: Save databaseName to user
-    const filePath = `./tmp-backups/${databaseName}.sql`;
-    await req.files.backup.mv(filePath);
+router.post(
+  "/backup-upload",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const databaseName = user.databaseName;
+    if (req.files) {
+      const filePath = `./tmp-backups/${databaseName}.sql`;
 
-    createDatabase(databaseName, filePath);
+      await req.files.backup.mv(filePath);
 
-    res.json({ databaseName });
+      createDatabase(databaseName, filePath);
+      UserModel.updateOne({ email: user.email }, { databaseName });
+
+      res.json({ databaseName });
+    }
   }
-});
+);
 
 /******************************************************************************
  *          Get Specific Contact - "POST /api/rt/get-contact/"
  ******************************************************************************/
 
-router.post("/get-contact", async (req: Request, res: Response) => {
-  // TODO: Get Database name from User - JWT
-  const db = await connectToDatabase("rtbackup12");
-  const contact: RedtailContact[] = await db.query(
-    `SELECT * FROM contacts WHERE id = ${req.body.id}`
-  );
-  db.close();
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  res.json(contact);
-});
+router.post(
+  "/get-contact",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+
+    const db = await connectToDatabase(user.databaseName);
+    const contact: RedtailContact[] = await db.query(
+      `SELECT * FROM contacts WHERE id = ${req.body.id}`
+    );
+    db.close();
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    res.json(contact);
+  }
+);
 
 /******************************************************************************
  *         Get All Contacts - "GET /api/rt/get-contacts"
  ******************************************************************************/
 
-router.get("/get-contacts", async (req: Request, res: Response) => {
-  console.log(JSON.stringify(req.user));
-  console.log(JSON.stringify(req.body));
-  // TODO: Get Database name from User - JWT
-  const db = await connectToDatabase("rtbackup12");
-  const contacts: RedtailContact[] = await db.query(`SELECT * FROM contacts`);
-  db.close();
-  res.statusCode = 200;
-  res.setHeader("Content-Type", "application/json");
-  res.json({ contacts });
-});
+router.get(
+  "/get-contacts",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
 
-router.post("/contact-submit", async (req: Request, res: Response) => {
-  res.statusCode = 200;
-  // TODO: Update new database (for spreadsheet purposes)
-  // TODO: Update Contact within Redtail if Auth is setup
-  console.log(req.body);
-  res.end();
-});
+    const db = await connectToDatabase(user.databaseName);
+    const contacts: RedtailContact[] = await db.query(`SELECT * FROM contacts`);
+    db.close();
+
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "application/json");
+    res.json({ contacts });
+  }
+);
+
+router.post(
+  "/contact-submit",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    res.statusCode = 200;
+    // TODO: Update new database (for spreadsheet purposes)
+    // TODO: Update Contact within Redtail if Auth is setup
+    console.log(req.body);
+    res.end();
+  }
+);
 
 /******************************************************************************
  *                                     Export

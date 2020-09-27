@@ -1,12 +1,15 @@
 import { Request, Response, Router } from "express";
-import { BAD_REQUEST, CREATED, OK } from "http-status-codes";
-import { ParamsDictionary } from "express-serve-static-core";
-
-import { CLIENT_HOME_PAGE_URL, paramMissingError } from "@shared/constants";
-import UserModel, { IUser } from "src/models/User.model";
+import { StatusCodes } from "http-status-codes";
 import passport from "passport";
-import { GoogleProfile, GoogleUser } from "src/interfaces/google.interface";
-import { createDatabaseName } from "../shared/utils/createDatabaseName";
+import {
+  CLIENT_HOME_PAGE_URL,
+  CLIENT_LOGIN_PAGE_URL,
+  paramMissingError,
+} from "@shared/constants";
+import UserModel, { IUser } from "src/models/User.model";
+import { GoogleUser } from "src/interfaces/google.interface";
+import { findOrCreateGoogleUser } from "../shared/utils/findOrCreateGoogleUser";
+import { signToken } from "@shared/utils/tokenAuth";
 // Init shared
 const router = Router();
 
@@ -16,7 +19,7 @@ const router = Router();
 
 router.get("/all", async (req: Request, res: Response) => {
   const users: IUser[] = await UserModel.find();
-  return res.status(OK).json({ users });
+  return res.status(StatusCodes.OK).json({ users });
 });
 
 /******************************************************************************
@@ -26,47 +29,34 @@ router.get("/all", async (req: Request, res: Response) => {
 router.post("/add", async (req: Request, res: Response) => {
   const { user } = req.body;
   if (!user) {
-    return res.status(BAD_REQUEST).json({
+    return res.status(StatusCodes.BAD_REQUEST).json({
       error: paramMissingError,
     });
   }
 
   await UserModel.create(user);
 
-  return res.status(CREATED).end();
+  return res.status(StatusCodes.CREATED).end();
 });
 
 router.get(
   "/auth",
   passport.authenticate("google", {
-    successRedirect: CLIENT_HOME_PAGE_URL,
-    failureRedirect: "http://localhost:3000/", // TODO: Update Failure redirect
-  })
-);
+    failureRedirect: CLIENT_LOGIN_PAGE_URL,
+  }),
+  async (req: Request, res: Response) => {
+    const { profile } = req.user as GoogleUser;
 
-/******************************************************************************
- *                       Update - "PUT /api/users/update"
- ******************************************************************************/
+    const user: IUser = await findOrCreateGoogleUser(profile);
 
-router.put("/update", async (req: Request, res: Response) => {
-  const { user } = req.body;
-  if (!user) {
-    return res.status(BAD_REQUEST).json({
-      error: paramMissingError,
-    });
+    return res
+      .status(200)
+      .cookie("jwt", signToken(user), {
+        httpOnly: true,
+      })
+      .redirect(CLIENT_HOME_PAGE_URL);
   }
-  user.id = Number(user.id);
-  return res.status(OK).end();
-});
-
-/******************************************************************************
- *                    Delete - "DELETE /api/users/delete/:id"
- ******************************************************************************/
-
-router.delete("/delete/:id", async (req: Request, res: Response) => {
-  const { id } = req.params as ParamsDictionary;
-  return res.status(OK).end();
-});
+);
 
 /******************************************************************************
  *                                     Export

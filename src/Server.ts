@@ -45,7 +45,12 @@ app.use(
     keys: ["funeveryday"], // TODO: Make random string
   })
 );
-app.use(cors());
+app.use(
+  cors({
+    origin: "http://localhost:3000",
+    credentials: true,
+  })
+);
 
 // Show routes called in console during development
 if (process.env.NODE_ENV === "development") {
