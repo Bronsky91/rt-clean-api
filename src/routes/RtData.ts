@@ -77,9 +77,22 @@ router.post(
   async (req: Request, res: Response) => {
     res.statusCode = 200;
     // TODO: Update new database (for spreadsheet purposes)
-    // TODO: Update Contact within Redtail if Auth is setup
+    // TODO: Update Contact within Redtail
     console.log(req.body);
     res.end();
+  }
+);
+
+
+// TODO: Get the values and record IDs for each dropdown list needed for the clean up page
+router.get(
+  "/rt-dropdowns",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    // const userKey: string = user.rtUserkey
+    // TODO: Make sure the user has a UserKey (authed with RT). If so, grab the drop down values
+    // RT needs this in the header -> {Authorization: 'Userkey base64encode(API_KEY:USER_KEY)}'
   }
 );
 
