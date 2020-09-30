@@ -4,6 +4,7 @@ import { connectToDatabase } from "../rt-data/connect-to-database";
 import { RedtailContact } from "src/interfaces/redtail.interface";
 import { isTokenAuth } from "@shared/utils/tokenAuth";
 import UserModel, { IUser } from "src/models/User.model";
+import logger from "@shared/Logger";
 
 // Init shared
 const router = Router();
@@ -17,6 +18,10 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
+    if (process.env.NODE_ENV === "development") {
+      logger.info("user: " + JSON. stringify(user));
+    }
+    
     const databaseName = user.databaseName;
     if (req.files) {
       const filePath = `./tmp-backups/${databaseName}.sql`;
