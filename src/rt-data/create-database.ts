@@ -39,9 +39,9 @@ export const createDatabase = async (database: string, filePath: string) => {
     };
   };
   const con = makeCon();
-  await con.query(`CREATE DATABASE ${database}`);
-  con.close()
-  
+  await con.query(`CREATE DATABASE \`${database}\``);
+  con.close();
+
   await dumpImporter(
     MY_SQL_HOST,
     MY_SQL_USER,

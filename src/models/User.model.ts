@@ -1,9 +1,9 @@
-import mongoose, { Schema, Document, model } from "mongoose";
+import { Schema, Document, model } from "mongoose";
 
 export interface IUser extends Document {
   email: string;
   displayName?: string;
-  databaseName: string;
+  databaseName?: string;
   rtUserkey?: string;
   provider?: string;
   providerId?: string;
@@ -12,7 +12,7 @@ export interface IUser extends Document {
 const UserSchema: Schema = new Schema({
   email: { type: String, required: true, unique: true },
   displayName: { type: String, required: false },
-  databaseName: { type: String, required: true, unique: true },
+  databaseName: { type: String, required: false, unique: true, sparse: true },
   rtUserkey: { type: String, required: false, unique: true, sparse: true },
   provider: { type: String, required: false },
   providerId: { type: String, required: false },

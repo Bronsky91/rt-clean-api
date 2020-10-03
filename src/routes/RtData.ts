@@ -5,6 +5,8 @@ import { RedtailContact } from "src/interfaces/redtail.interface";
 import { isTokenAuth } from "@shared/utils/tokenAuth";
 import UserModel, { IUser } from "src/models/User.model";
 import logger from "@shared/Logger";
+import { v4 as uuid } from "uuid";
+import RtDatabaseModel from "src/models/RtDatabase.model";
 
 // Init shared
 const router = Router();
@@ -18,20 +20,41 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    if (process.env.NODE_ENV === "development") {
-      logger.info("user: " + JSON. stringify(user));
+    if (user.databaseName) {
+      return res
+        .status(500)
+        .send("User already has an active Database assigned");
     }
-    
-    const databaseName = user.databaseName;
+
+    const databaseName: string = uuid();
+
     if (req.files) {
       const filePath = `./tmp-backups/${databaseName}.sql`;
 
       await req.files.backup.mv(filePath);
+      createDatabase(databaseName, filePath).then(() => {
+        RtDatabaseModel.create({ databaseName })
+          .then(() =>
+            UserModel.updateOne(
+              { email: user.email },
+              { $set: { databaseName } }
+            ).exec()
+          )
+          .catch((e) => logger.error(e));
+      });
 
-      createDatabase(databaseName, filePath);
-
-      res.json({ databaseName });
+      res.sendStatus(200);
     }
+  }
+);
+
+router.get(
+  "/check-backup-upload",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const dbUser = await UserModel.findOne({ email: user.email });
+    dbUser?.databaseName ? res.sendStatus(200) : res.sendStatus(201);
   }
 );
 
@@ -44,6 +67,11 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
+    if (!user.databaseName) {
+      return res
+        .status(500)
+        .send("User already has an active Database assigned");
+    }
 
     const db = await connectToDatabase(user.databaseName);
     const contact: RedtailContact[] = await db.query(
@@ -65,6 +93,9 @@ router.get(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
+    if (!user.databaseName) {
+      return res.status(500).send("User has no Database assigned");
+    }
 
     const db = await connectToDatabase(user.databaseName);
     const contacts: RedtailContact[] = await db.query(`SELECT * FROM contacts`);
@@ -87,7 +118,6 @@ router.post(
     res.end();
   }
 );
-
 
 // TODO: Get the values and record IDs for each dropdown list needed for the clean up page
 router.get(

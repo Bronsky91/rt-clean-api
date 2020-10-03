@@ -1,6 +1,6 @@
 import { IUser } from "src/models/User.model";
 import jwt from "jsonwebtoken";
-import { CLIENT_LOGIN_PAGE_URL, JWT_SECRET } from "@shared/constants";
+import { JWT_SECRET } from "@shared/constants";
 import { NextFunction, Request, Response } from "express";
 
 // Middleware to check if the user is authenticated
@@ -16,11 +16,10 @@ export const isTokenAuth = (
       req.user = user;
       next();
     } else {
-      // TODO: Redirects not working, just sending 401 error code
-      res.redirect(CLIENT_LOGIN_PAGE_URL, 401);
+      res.sendStatus(401);
     }
   } else {
-    res.redirect(CLIENT_LOGIN_PAGE_URL, 401);
+    res.sendStatus(401);
   }
 };
 
