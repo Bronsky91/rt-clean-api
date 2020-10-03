@@ -16,16 +16,16 @@ export const isTokenAuth = (
       req.user = user;
       next();
     } else {
-      res.sendStatus(401);
+      res.sendStatus(403);
     }
   } else {
-    res.sendStatus(401);
+    res.sendStatus(403);
   }
 };
 
 export const signToken = (user: IUser) => {
   return jwt.sign({ data: user }, JWT_SECRET, {
-    expiresIn: 3600000, // 1 hour
+    expiresIn: "1 day",
   });
 };
 
