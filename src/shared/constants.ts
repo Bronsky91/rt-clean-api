@@ -11,7 +11,7 @@ export const MY_SQL_HOST = process.env.MY_SQL_HOST || "";
 export const MY_SQL_USER = process.env.MY_SQL_USER || "";
 export const MY_SQL_PASSWORD = process.env.MY_SQL_PASSWORD || "";
 
-export const CLIENT_HOME_PAGE_URL = "http://localhost:3000/import-data";
+export const CLIENT_HOME_PAGE_URL = "http://localhost:3000/dashboard";
 export const CLIENT_LOGIN_PAGE_URL = "http://localhost:3000/";
 
 export const REDTAIL_API_KEY = process.env.REDTAIL_API_KEY || "";
