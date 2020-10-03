@@ -9,7 +9,8 @@ export const isTokenAuth = (
   res: Response,
   next: NextFunction
 ) => {
-  const token: string | undefined = req.cookies.jwt;
+  const headersCookie = req.headers.cookie;
+  const token: string | undefined = req.cookies.jwt || headersCookie;
   if (token) {
     const user: IUser = verifyToken(token);
     if (user) {

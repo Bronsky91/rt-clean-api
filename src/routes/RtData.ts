@@ -67,13 +67,14 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    if (!user.databaseName) {
+    const dbUser = await UserModel.findOne({ email: user.email });
+    if (!dbUser || !dbUser.databaseName) {
       return res
         .status(500)
         .send("User already has an active Database assigned");
     }
 
-    const db = await connectToDatabase(user.databaseName);
+    const db = await connectToDatabase(dbUser.databaseName);
     const contact: RedtailContact[] = await db.query(
       `SELECT * FROM contacts WHERE id = ${req.body.id}`
     );
@@ -93,11 +94,12 @@ router.get(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    if (!user.databaseName) {
+    const dbUser = await UserModel.findOne({ email: user.email });
+    if (!dbUser || !dbUser.databaseName) {
       return res.status(500).send("User has no Database assigned");
     }
 
-    const db = await connectToDatabase(user.databaseName);
+    const db = await connectToDatabase(dbUser.databaseName);
     const contacts: RedtailContact[] = await db.query(`SELECT * FROM contacts`);
     db.close();
 
