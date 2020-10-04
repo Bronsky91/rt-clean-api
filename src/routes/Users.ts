@@ -11,7 +11,6 @@ import { GoogleUser } from "src/interfaces/google.interface";
 import { findOrCreateGoogleUser } from "../shared/utils/findOrCreateGoogleUser";
 import { isTokenAuth, signToken } from "@shared/utils/tokenAuth";
 import { authRedtail } from "src/rt-api/auth";
-import { AxiosResponse } from "axios";
 // Init shared
 const router = Router();
 
