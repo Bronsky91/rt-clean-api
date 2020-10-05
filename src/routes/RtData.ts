@@ -69,9 +69,15 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    if (user.rtUserkey) {
-      const results = await getContactById(user.rtUserkey, req.body.id);
+    const userKey: string | undefined =
+      user.rtUserkey ||
+      (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+    if (userKey) {
+      const results = await getContactById(userKey, req.body.id);
       res.json(results.data);
+    } else {
+      // Redtail Auth Isn't Setup
+      res.sendStatus(401);
     }
     res.end();
   }
@@ -86,9 +92,15 @@ router.get(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    if (user.rtUserkey) {
-      const results = await getContactsByPage(user.rtUserkey, 1);
+    const userKey: string | undefined =
+      user.rtUserkey ||
+      (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+    if (userKey) {
+      const results = await getContactsByPage(userKey, 1);
       res.json({ contacts: results.data["Detail"] });
+    } else {
+      // Redtail Auth Isn't Setup
+      res.sendStatus(401);
     }
     res.end();
   }
