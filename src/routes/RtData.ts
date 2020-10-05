@@ -7,6 +7,8 @@ import UserModel, { IUser } from "src/models/User.model";
 import logger from "@shared/Logger";
 import { v4 as uuid } from "uuid";
 import RtDatabaseModel from "src/models/RtDatabase.model";
+import { getContactsByPage } from "src/rt-api/get-contacts";
+import { getContactById } from "src/rt-api/get-contact";
 
 // Init shared
 const router = Router();
@@ -67,21 +69,11 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    const dbUser = await UserModel.findOne({ email: user.email });
-    if (!dbUser || !dbUser.databaseName) {
-      return res
-        .status(500)
-        .send("User already has an active Database assigned");
+    if (user.rtUserkey) {
+      const results = await getContactById(user.rtUserkey, req.body.id);
+      res.json(results.data);
     }
-
-    const db = await connectToDatabase(dbUser.databaseName);
-    const contact: RedtailContact[] = await db.query(
-      `SELECT * FROM contacts WHERE id = ${req.body.id}`
-    );
-    db.close();
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.json(contact);
+    res.end();
   }
 );
 
@@ -94,18 +86,11 @@ router.get(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    const dbUser = await UserModel.findOne({ email: user.email });
-    if (!dbUser || !dbUser.databaseName) {
-      return res.status(500).send("User has no Database assigned");
+    if (user.rtUserkey) {
+      const results = await getContactsByPage(user.rtUserkey, 1);
+      res.json({ contacts: results.data["Detail"] });
     }
-
-    const db = await connectToDatabase(dbUser.databaseName);
-    const contacts: RedtailContact[] = await db.query(`SELECT * FROM contacts`);
-    db.close();
-
-    res.statusCode = 200;
-    res.setHeader("Content-Type", "application/json");
-    res.json({ contacts });
+    res.end();
   }
 );
 
