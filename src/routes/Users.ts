@@ -70,6 +70,16 @@ router.get(
   }
 );
 
+router.get(
+  "/rt-auth-check",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const dbUser = await UserModel.findOne({ email: user.email });
+    res.json({ redtailAuth: !!dbUser?.rtUserkey });
+  }
+);
+
 router.get("/auth-check", isTokenAuth, async (req: Request, res: Response) => {
   res.sendStatus(200);
 });
