@@ -1,14 +1,24 @@
 import { Request, Response, Router } from "express";
 import { createDatabase } from "../rt-data/create-database";
 import { connectToDatabase } from "../rt-data/connect-to-database";
-import { RedtailContact } from "src/interfaces/redtail.interface";
+import {
+  RedtailContact,
+  RedtailSettingsData,
+} from "src/interfaces/redtail.interface";
 import { isTokenAuth } from "@shared/utils/tokenAuth";
 import UserModel, { IUser } from "src/models/User.model";
 import logger from "@shared/Logger";
 import { v4 as uuid } from "uuid";
 import RtDatabaseModel from "src/models/RtDatabase.model";
-import { getContactsByPage } from "src/rt-api/get-contacts";
-import { getContactById } from "src/rt-api/get-contact";
+import { getContactsByPage } from "src/rt-api/get-contacts-by-page";
+import { getContactById } from "src/rt-api/get-contact-by-id";
+import { settings } from "cluster";
+import { getStatuses } from "src/rt-api/get-statuses";
+import { getCategories } from "src/rt-api/get-categories";
+import { getSources } from "src/rt-api/get-sources";
+import { getSalutations } from "src/rt-api/get-salutations";
+import { getServicingAdvisors } from "src/rt-api/get-servicing-advisors";
+import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
 
 // Init shared
 const router = Router();
@@ -96,8 +106,8 @@ router.get(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const results = await getContactsByPage(userKey, 1);
-      res.json({ contacts: results.data["Detail"] });
+      const contacts = await getContactsByPage(userKey, 1);
+      res.json({ contacts });
     } else {
       // Redtail Auth Isn't Setup
       res.sendStatus(401);
@@ -118,17 +128,35 @@ router.post(
   }
 );
 
-// TODO: Get the values and record IDs for each dropdown list needed for the clean up page
-router.get(
-  "/rt-dropdowns",
-  isTokenAuth,
-  async (req: Request, res: Response) => {
-    const user: IUser = req.user as IUser;
-    // const userKey: string = user.rtUserkey
-    // TODO: Make sure the user has a UserKey (authed with RT). If so, grab the drop down values
-    // RT needs this in the header -> {Authorization: 'Userkey base64encode(API_KEY:USER_KEY)}'
+router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
+  const user: IUser = req.user as IUser;
+  const userKey: string | undefined =
+    user.rtUserkey ||
+    (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+
+  const settingsData: RedtailSettingsData = {
+    statuses: [],
+    categories: [],
+    sources: [],
+    salutations: [],
+    servicingAdvisors: [],
+    writingAdvisors: [],
+  };
+
+  if (userKey) {
+    settingsData.statuses = await getStatuses(userKey);
+    settingsData.categories = await getCategories(userKey);
+    settingsData.sources = await getSources(userKey);
+    settingsData.salutations = await getSalutations(userKey);
+    settingsData.servicingAdvisors = await getServicingAdvisors(userKey);
+    settingsData.writingAdvisors = await getWritingAdvisors(userKey);
+
+    res.json(settingsData);
+  } else {
+    // Redtail Auth Isn't Setup
+    res.sendStatus(401);
   }
-);
+});
 
 /******************************************************************************
  *                                     Export

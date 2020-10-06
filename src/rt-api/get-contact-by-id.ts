@@ -3,7 +3,6 @@ import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
 
 export const getContactById = (userKey: string, id: number) => {
-  console.log(id);
   return Axios.get(
     REDTAIL_API_URL + `/contacts/${id}/masterv2`,
     createRtApiConfig(userKey)
