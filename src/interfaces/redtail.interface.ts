@@ -1,4 +1,42 @@
-export interface RedtailContact {
+// Used when SENDING data to Redtail
+export interface RedtailContactUpdate {
+  Fields: ContactFieldsUpdate;
+  // TODO: update to include street addresses, email addresses, phone numbers
+}
+
+export interface ContactFieldsUpdate {
+  AnniversaryDate: string;
+  CategoryID: number;
+  ClientID: number;
+  ClientSinceDate: string;
+  CompanyID: number;
+  DateOfBirth: string;
+  Designation: string;
+  Family: boolean;
+  FamilyHeadID: number;
+  Familyname: string;
+  Firstname: string;
+  Gender: string;
+  JobTitle: string;
+  Lastname: string;
+  MaritalStatus: string;
+  Middlename: string;
+  Name: string;
+  Nickname: string;
+  ReferredBy: string;
+  Salutation: string;
+  ServicingAdvisorID: number;
+  SourceID: number;
+  StatusID: number;
+  Suffix: string;
+  TaxID: string;
+  TypeID: string;
+  WritingAdvisorID: number;
+}
+
+
+// Used when RECEIVING data from Redtail
+export interface RedtailContactListRec {
   Age: number;
   Category: string;
   CategoryID: number;
@@ -16,7 +54,7 @@ export interface RedtailContact {
   MaritalDate: string;
   MaritalStatus: string;
   MiddleName: string;
-  Name?: null;
+  Name: string;
   ReferredBy: string;
   ServicingAdvisor: string;
   ServicingAdvisorID: number;
@@ -29,13 +67,14 @@ export interface RedtailContact {
   WritingAdvisorID: number;
 }
 
-export interface RedtailContactMaster {
-  Address?: AddressEntity[] | null;
-  ContactRecord: ContactRecord;
-  Internet?: InternetEntity[] | null;
-  Phone?: PhoneEntity[] | null;
+export interface RedtailContactRec {
+  Address?: AddressRec[] | null;
+  ContactRecord: ContactFieldsRec;
+  Internet?: InternetRec[] | null;
+  Phone?: PhoneRec[] | null;
 }
-export interface AddressEntity {
+
+export interface AddressRec {
   Address1: string;
   Address2: string;
   City: string;
@@ -54,7 +93,7 @@ export interface AddressEntity {
   Zip: string;
   Zip4?: null;
 }
-export interface ContactRecord {
+export interface ContactFieldsRec {
   Age: number;
   AnniversaryDate: string;
   Category: string;
@@ -101,7 +140,8 @@ export interface ContactRecord {
   WritingAdvisor: string;
   WritingAdvisorID: number;
 }
-export interface InternetEntity {
+
+export interface InternetRec {
   Address: string;
   ClientID: number;
   Label: string;
@@ -115,7 +155,7 @@ export interface InternetEntity {
   Type: string;
   TypeID: number;
 }
-export interface PhoneEntity {
+export interface PhoneRec {
   ClientID: number;
   DisplayOrder: number;
   Extension: string;
@@ -133,6 +173,7 @@ export interface PhoneEntity {
   Type: string;
   TypeID: string;
 }
+
 
 export interface RedtailStatus {
   CSLCode: number;
