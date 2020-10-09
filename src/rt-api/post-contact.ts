@@ -26,7 +26,8 @@ export const postContact = async (
   if (contact.Address) {
     contact.Address.forEach(async (item) => {
       const addressResult = await Axios.put(
-        REDTAIL_API_URL + `/contacts/${item.ClientID}/addresses/${item.RecID}`,
+        REDTAIL_API_URL +
+          `/contacts/${contact.ContactRecord.ClientID}/addresses/${item.RecID}`,
         item,
         createRtApiConfig(userKey)
       );
@@ -37,7 +38,8 @@ export const postContact = async (
   if (contact.Internet) {
     contact.Internet.forEach(async (item) => {
       const internetResult = await Axios.put(
-        REDTAIL_API_URL + `/contacts/${item.ClientID}/internets/${item.RecID}`,
+        REDTAIL_API_URL +
+          `/contacts/${contact.ContactRecord.ClientID}/internets/${item.RecID}`,
         item,
         createRtApiConfig(userKey)
       );
@@ -48,7 +50,8 @@ export const postContact = async (
   if (contact.Phone) {
     contact.Phone.forEach(async (item) => {
       const phoneResult = await Axios.put(
-        REDTAIL_API_URL + `/contacts/${item.ClientID}/phones/${item.RecID}`,
+        REDTAIL_API_URL +
+          `/contacts/${contact.ContactRecord.ClientID}/phones/${item.RecID}`,
         item,
         createRtApiConfig(userKey)
       );
