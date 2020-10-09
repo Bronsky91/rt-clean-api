@@ -1,7 +1,24 @@
 // Used when SENDING data to Redtail
 export interface RedtailContactUpdate {
-  Fields: ContactFieldsUpdate;
-  // TODO: update to include street addresses, email addresses, phone numbers
+  Address?: AddressUpdate[] | null;
+  ContactRecord: ContactFieldsUpdate;
+  Internet?: InternetUpdate[] | null;
+  Phone?: PhoneUpdate[] | null;
+}
+
+export interface AddressUpdate {
+  Address1: string;
+  Address2: string;
+  City: string;
+  ClientID: number;
+  Label: string;
+  Preferred: boolean;
+  Primary: boolean;
+  RecID: number;
+  SharedAddress: boolean;
+  State: string;
+  TypeID: string;
+  Zip: string;
 }
 
 export interface ContactFieldsUpdate {
@@ -34,6 +51,29 @@ export interface ContactFieldsUpdate {
   WritingAdvisorID: number;
 }
 
+export interface InternetUpdate {
+  Address: string;
+  ClientID: number;
+  Label: string;
+  Preferred: boolean;
+  RecID: number;
+  TypeID: string;
+  Primary: boolean;
+}
+
+export interface PhoneUpdate {
+  ClientID: number;
+  DisplayOrder: number;
+  Extension: string;
+  Label: string;
+  Number: string;
+  Preferred: boolean;
+  RecID: number;
+  SharedPhoneNumber: boolean;
+  SpeedDial: string;
+  TypeID: string;
+  Primary: boolean;
+}
 
 // Used when RECEIVING data from Redtail
 export interface RedtailContactListRec {
@@ -173,7 +213,6 @@ export interface PhoneRec {
   Type: string;
   TypeID: string;
 }
-
 
 export interface RedtailStatus {
   CSLCode: number;
