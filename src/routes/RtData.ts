@@ -131,6 +131,26 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     servicingAdvisors: [],
     writingAdvisors: [],
     gender: [{ Gender: "Male" }, { Gender: "Female" }, { Gender: "Unknown" }],
+    addressTypes: [
+      { Description: "Home", TypeID: "H" },
+      { Description: "Mailing", TypeID: "M" },
+      { Description: "Other", TypeID: "O" },
+      { Description: "Work", TypeID: "W" },
+    ],
+    internetTypes: [
+      { Description: "Home", TypeID: 1 },
+      { Description: "Work", TypeID: 2 },
+      { Description: "Other", TypeID: 3 },
+    ],
+    phoneTypes: [
+      { Description: "Direct Dial", TypeID: "DD" },
+      { Description: "Fax", TypeID: "WF" },
+      { Description: "Home", TypeID: "HM" },
+      { Description: "Mobile", TypeID: "CL" },
+      { Description: "Other", TypeID: "OT" },
+      { Description: "Toll Free", TypeID: "TF" },
+      { Description: "Work", TypeID: "WK" },
+    ],
   };
 
   if (userKey) {
