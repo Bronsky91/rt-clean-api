@@ -33,11 +33,11 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    if (user.databaseName) {
-      return res
-        .status(500)
-        .send("User already has an active Database assigned");
-    }
+    // if (user.databaseName) {
+    //   return res
+    //     .status(500)
+    //     .send("User already has an active Database assigned");
+    // }
 
     const databaseName: string = uuid();
 
@@ -46,14 +46,14 @@ router.post(
 
       await req.files.backup.mv(filePath);
       createDatabase(databaseName, filePath).then(() => {
-        RtDatabaseModel.create({ databaseName })
-          .then(() =>
-            UserModel.updateOne(
-              { email: user.email },
-              { $set: { databaseName } }
-            ).exec()
-          )
-          .catch((e) => logger.error(e));
+        // RtDatabaseModel.create({ databaseName })
+        //   .then(() =>
+        //     UserModel.updateOne(
+        //       { email: user.email },
+        //       { $set: { databaseName } }
+        //     ).exec()
+        //   )
+        //   .catch((e) => logger.error(e));
       });
 
       res.sendStatus(200);
@@ -130,6 +130,7 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     salutations: [],
     servicingAdvisors: [],
     writingAdvisors: [],
+    gender: [{ Gender: "Male" }, { Gender: "Female" }, { Gender: "Unknown" }],
   };
 
   if (userKey) {
