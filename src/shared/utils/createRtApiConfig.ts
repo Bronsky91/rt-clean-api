@@ -13,3 +13,13 @@ export const createRtApiConfig = (userKey: string) => {
   };
   return config;
 };
+
+export const createRtApiHeaders = (userKey: string) => {
+  const config = {
+    Authorization: `Userkeyauth ${base64encode(
+      `${REDTAIL_API_KEY}:${userKey}`
+    )}`,
+    "Content-Type": "application/json",
+  };
+  return config;
+};

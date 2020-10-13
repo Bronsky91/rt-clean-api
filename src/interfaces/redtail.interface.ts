@@ -57,7 +57,7 @@ export interface InternetUpdate {
   Label: string;
   Preferred: boolean;
   RecID: number;
-  TypeID: string;
+  TypeID: number;
   Primary: boolean;
 }
 

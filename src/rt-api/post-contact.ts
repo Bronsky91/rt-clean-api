@@ -1,62 +1,87 @@
 import { REDTAIL_API_URL } from "@shared/constants";
 import logger from "@shared/Logger";
-import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
+import { createRtApiHeaders } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
-import {
-  RedtailContactUpdate,
-  ContactFieldsRec,
-  RedtailContactRec,
-} from "src/interfaces/redtail.interface";
+import { RedtailContactUpdate } from "src/interfaces/redtail.interface";
 
 export const postContact = async (
   userKey: string,
   contact: RedtailContactUpdate
-) => {
+): Promise<number> => {
   logger.info("Received contact: " + JSON.stringify(contact));
 
-  // Update contact
-  const contactRecordResult = await Axios.put(
-    REDTAIL_API_URL + `/contacts/${contact.ContactRecord.ClientID}`,
-    contact.ContactRecord,
-    createRtApiConfig(userKey)
-  );
-  const returnedContactRecord: RedtailContactRec = contactRecordResult.data;
+  // Update contact record
+  try {
+    const contactRecordResult = await Axios({
+      method: "put",
+      url: REDTAIL_API_URL + `/contacts/${contact.ContactRecord.ClientID}`,
+      headers: createRtApiHeaders(userKey),
+      data: contact.ContactRecord,
+    });
+  } catch (e) {
+    logger.error("ContactRecord RT API PUT error: " + JSON.stringify(e));
+    return 1;
+  }
 
   // If present, update contact's street addresses
   if (contact.Address) {
     contact.Address.forEach(async (item) => {
-      const addressResult = await Axios.put(
-        REDTAIL_API_URL +
-          `/contacts/${contact.ContactRecord.ClientID}/addresses/${item.RecID}`,
-        item,
-        createRtApiConfig(userKey)
-      );
+      try {
+        const addressResult = await Axios({
+          method: "put",
+          url:
+            REDTAIL_API_URL +
+            `/contacts/${contact.ContactRecord.ClientID}/addresses/${item.RecID}`,
+          headers: createRtApiHeaders(userKey),
+          data: item,
+        });
+        if (addressResult.status !== 200) {
+          return addressResult;
+        }
+      } catch (e) {
+        logger.error("Address RT API PUT error: " + JSON.stringify(e));
+        return 2;
+      }
     });
   }
 
   // If present, update contact's email addresses
   if (contact.Internet) {
     contact.Internet.forEach(async (item) => {
-      const internetResult = await Axios.put(
-        REDTAIL_API_URL +
-          `/contacts/${contact.ContactRecord.ClientID}/internets/${item.RecID}`,
-        item,
-        createRtApiConfig(userKey)
-      );
+      try {
+        const internetResult = await Axios({
+          method: "put",
+          url:
+            REDTAIL_API_URL +
+            `/contacts/${contact.ContactRecord.ClientID}/internets/${item.RecID}`,
+          headers: createRtApiHeaders(userKey),
+          data: item,
+        });
+      } catch (e) {
+        logger.error("Internet RT API PUT error: " + JSON.stringify(e));
+        return 3;
+      }
     });
   }
 
   // If present, update contact's phone numbers
   if (contact.Phone) {
     contact.Phone.forEach(async (item) => {
-      const phoneResult = await Axios.put(
-        REDTAIL_API_URL +
-          `/contacts/${contact.ContactRecord.ClientID}/phones/${item.RecID}`,
-        item,
-        createRtApiConfig(userKey)
-      );
+      try {
+        const phoneResult = await Axios({
+          method: "put",
+          url:
+            REDTAIL_API_URL +
+            `/contacts/${contact.ContactRecord.ClientID}/phones/${item.RecID}`,
+          headers: createRtApiHeaders(userKey),
+          data: item,
+        });
+      } catch (e) {
+        logger.error("Phone RT API PUT error: " + JSON.stringify(e));
+        return 4;
+      }
     });
   }
 
-  return returnedContactRecord;
+  return 0;
 };

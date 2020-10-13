@@ -162,7 +162,11 @@ router.post(
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
       const results = await postContact(userKey, contact);
-      res.sendStatus(200);
+      if (results == 0) {
+        res.sendStatus(200);
+      } else {
+        res.sendStatus(500);
+      }
     } else {
       // Redtail Auth Isn't Setup
       res.sendStatus(401);
