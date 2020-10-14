@@ -72,7 +72,7 @@ router.get(
 );
 
 /******************************************************************************
- *          Get Specific Contact - "POST /api/rt/get-contact/"
+ *          Get Specific Contact - "POST /api/rt/get-contact"
  ******************************************************************************/
 
 router.post(
@@ -95,7 +95,30 @@ router.post(
 );
 
 /******************************************************************************
- *         Get All Contacts - "GET /api/rt/get-contacts"
+ *         Get Specific Page of Contacts - "POST /api/rt/get-contacts-page"
+ ******************************************************************************/
+
+router.post(
+  "/get-contacts-page",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const userKey: string | undefined =
+      user.rtUserkey ||
+      (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+    if (userKey) {
+      const contacts = await getContactsByPage(userKey, req.body.page);
+      res.json({ contacts });
+    } else {
+      // Redtail Auth Isn't Setup
+      res.sendStatus(401);
+    }
+    res.end();
+  }
+);
+
+/******************************************************************************
+ *         Get Initial Contacts - "GET /api/rt/get-contacts"
  ******************************************************************************/
 
 router.get(
@@ -116,6 +139,10 @@ router.get(
     res.end();
   }
 );
+
+/******************************************************************************
+ *         Get Dropdown Data - "GET /api/rt/dropdowns"
+ ******************************************************************************/
 
 router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
   const user: IUser = req.user as IUser;
@@ -169,7 +196,7 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
 });
 
 /******************************************************************************
- *          Update Specific Contact - "PUT /api/rt/contact-submit/"
+ *          Update Specific Contact - "PUT /api/rt/contact-submit"
  ******************************************************************************/
 
 router.post(
