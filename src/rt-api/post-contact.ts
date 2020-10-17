@@ -8,8 +8,6 @@ export const postContact = async (
   userKey: string,
   contact: RedtailContactUpdate
 ): Promise<number> => {
-  logger.info("Received contact: " + JSON.stringify(contact));
-
   // Update contact record
   try {
     const contactRecordResult = await Axios({
@@ -18,6 +16,9 @@ export const postContact = async (
       headers: createRtApiHeaders(userKey),
       data: contact.ContactRecord,
     });
+    if (contactRecordResult.status !== 200) {
+      return 1;
+    }
   } catch (e) {
     logger.error("ContactRecord RT API PUT error: " + JSON.stringify(e));
     return 1;
@@ -36,7 +37,7 @@ export const postContact = async (
           data: item,
         });
         if (addressResult.status !== 200) {
-          return addressResult;
+          return 2;
         }
       } catch (e) {
         logger.error("Address RT API PUT error: " + JSON.stringify(e));
@@ -57,6 +58,9 @@ export const postContact = async (
           headers: createRtApiHeaders(userKey),
           data: item,
         });
+        if (internetResult.status !== 200) {
+          return 2;
+        }
       } catch (e) {
         logger.error("Internet RT API PUT error: " + JSON.stringify(e));
         return 3;
@@ -76,6 +80,9 @@ export const postContact = async (
           headers: createRtApiHeaders(userKey),
           data: item,
         });
+        if (phoneResult.status !== 200) {
+          return 2;
+        }
       } catch (e) {
         logger.error("Phone RT API PUT error: " + JSON.stringify(e));
         return 4;
