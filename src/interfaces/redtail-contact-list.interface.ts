@@ -7,7 +7,7 @@ export interface ContactsEntity {
   type: string;
   first_name?: string | null;
   middle_name?: string | null;
-  last_name?: string | null;
+  last_name: string ;
   company_name?: string | null;
   full_name: string;
   nickname?: string | null;

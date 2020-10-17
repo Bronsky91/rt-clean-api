@@ -29,9 +29,9 @@ export interface RedtailPhoneTypes {
 }
 
 export interface RedtailSettingsData {
-  statuses: RedtailList[];
-  categories: RedtailList[];
-  sources: RedtailList[];
+  status_id: RedtailList[];
+  category_id: RedtailList[];
+  source_id: RedtailList[];
   salutations: RedtailList[];
   servicingAdvisors: RedtailList[];
   writingAdvisors: RedtailList[];

@@ -18,7 +18,7 @@ import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
 import { ContactsEntity, RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
 import { RedtailContactUpdate } from 'src/interfaces/redtail-contact-update.interface';
 import { RedtailSettingsData } from 'src/interfaces/redtail-settings.interface';
-import { RedtailSearchParam, searchContactsByParam } from 'src/rt-api/search-contact';
+import { RedtailIdAndLastName, searchContactsByParam } from 'src/rt-api/search-contact';
 
 // Init shared
 const router = Router();
@@ -122,6 +122,13 @@ router.get(
  *        POST Search Contacts by a single Param - "GET /api/rt/search-contacts"
  ******************************************************************************/
 
+ 
+export interface RedtailSearchParam {
+  status_id?: number[],
+  category_id?: number[],
+  source_id?: number[],
+}
+
 router.post(
   "/search-contacts",
   // isTokenAuth,
@@ -131,9 +138,37 @@ router.post(
       // user.rtUserkey ||
       // (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const params: RedtailSearchParam = {category_id: 3}
-      const data = await searchContactsByParam(userKey, params);
-      res.json(data);
+
+      const params: RedtailSearchParam = {category_id: [2,3], source_id: [4]}
+
+      let contactListPromises: Promise<any[]>[] = []
+      for (const [key, values] of Object.entries(params)) {
+        const contactSearchPromises: Promise<any[]>[] = values.map((value: number) => 
+          searchContactsByParam(userKey, {[key]: value})
+        )
+        contactListPromises = [...contactListPromises, ...contactSearchPromises]
+      }
+
+      const contactList = await Promise.all(contactListPromises)
+      const flatContactList = contactList.reduce((acc, val) => acc.concat(val), []);
+
+      const uniqueContactList = Array.from(
+        new Set(flatContactList.map((contact) => contact.id))
+      ).map((contactId) => {
+        return flatContactList.filter((c) => c.id === contactId)[0];
+      });
+
+      const filteredContactList = uniqueContactList
+        .filter(contact => {
+          for (const [key, values] of Object.entries(params)) {
+            // Contact must have either category AND either SourceID
+            if(!values.includes(contact[key])) { return false; }
+          }
+          return true;
+        })
+        .map(contact => ({id: contact.id, last_name: contact.last_name}))
+        
+      res.json(filteredContactList);
     } else {
       // Redtail Auth Isn't Setup
       res.sendStatus(401);
@@ -152,9 +187,9 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     user.rtUserkey ||
     (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     const settingsData: RedtailSettingsData = {
-    statuses: [],
-    categories: [],
-    sources: [],
+    status_id: [],
+    category_id: [],
+    source_id: [],
     salutations: [],
     servicingAdvisors: [],
     writingAdvisors: [],
@@ -183,9 +218,9 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
   
   
   if (userKey) {
-    settingsData.statuses = await getStatuses(userKey);
-    settingsData.categories = await getCategories(userKey);
-    settingsData.sources = await getSources(userKey);
+    settingsData.status_id = await getStatuses(userKey);
+    settingsData.category_id = await getCategories(userKey);
+    settingsData.source_id = await getSources(userKey);
     settingsData.salutations = await getSalutations(userKey);
     settingsData.servicingAdvisors = await getServicingAdvisors(userKey);
     settingsData.writingAdvisors = await getWritingAdvisors(userKey);

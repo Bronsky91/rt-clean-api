@@ -1,12 +1,12 @@
 import {  REDTAIL_TWAPI_URL } from "@shared/constants";
 import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
-import {  RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
+import {  ContactsEntity, RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
 
 export const searchContactsByParam = async (
   userKey: string,
-  searchParam: RedtailSearchParam 
-) => {
+  searchParam: RedtailSingleParam 
+): Promise<ContactsEntity[]> => {
   const result = await Axios.get(
     REDTAIL_TWAPI_URL + `/contacts/search`,
     {params: {page: 1, ...searchParam}, ...createRtApiConfig(userKey)}
@@ -30,11 +30,14 @@ export const searchContactsByParam = async (
   const flatContacts = nextContacts.reduce((acc, val) => acc.concat(val), []);
   contacts = [...contacts, ...flatContacts]
   
-  const contactsByLastName = contacts.map(contact => ({id: contact.id, last_name: contact.last_name}))
-  return contactsByLastName
+  return contacts
 };
 
-export interface RedtailSearchParam {
+export interface RedtailIdAndLastName {
+  id: number,
+  last_name: string
+}
+export interface RedtailSingleParam {
   status_id?: number,
   category_id?: number,
   source_id?: number,
