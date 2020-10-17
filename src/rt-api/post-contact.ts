@@ -2,7 +2,7 @@ import { REDTAIL_API_URL } from "@shared/constants";
 import logger from "@shared/Logger";
 import { createRtApiHeaders } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
-import { RedtailContactUpdate } from "src/interfaces/redtail.interface";
+import { AddressUpdate, InternetUpdate, PhoneUpdate, RedtailContactUpdate } from 'src/interfaces/redtail-contact-update.interface';
 
 export const postContact = async (
   userKey: string,
@@ -26,15 +26,15 @@ export const postContact = async (
 
   // If present, update contact's street addresses
   if (contact.Address) {
-    contact.Address.forEach(async (item) => {
+    contact.Address.forEach(async (addressItem: AddressUpdate) => {
       try {
         const addressResult = await Axios({
           method: "put",
           url:
             REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/addresses/${item.RecID}`,
+            `/contacts/${contact.ContactRecord.ClientID}/addresses/${addressItem.RecID}`,
           headers: createRtApiHeaders(userKey),
-          data: item,
+          data: addressItem,
         });
         if (addressResult.status !== 200) {
           return 2;
@@ -48,15 +48,15 @@ export const postContact = async (
 
   // If present, update contact's email addresses
   if (contact.Internet) {
-    contact.Internet.forEach(async (item) => {
+    contact.Internet.forEach(async (internet: InternetUpdate) => {
       try {
         const internetResult = await Axios({
           method: "put",
           url:
             REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/internets/${item.RecID}`,
+            `/contacts/${contact.ContactRecord.ClientID}/internets/${internet.RecID}`,
           headers: createRtApiHeaders(userKey),
-          data: item,
+          data: internet,
         });
         if (internetResult.status !== 200) {
           return 2;
@@ -70,15 +70,15 @@ export const postContact = async (
 
   // If present, update contact's phone numbers
   if (contact.Phone) {
-    contact.Phone.forEach(async (item) => {
+    contact.Phone.forEach(async (phone: PhoneUpdate) => {
       try {
         const phoneResult = await Axios({
           method: "put",
           url:
             REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/phones/${item.RecID}`,
+            `/contacts/${contact.ContactRecord.ClientID}/phones/${phone.RecID}`,
           headers: createRtApiHeaders(userKey),
-          data: item,
+          data: phone,
         });
         if (phoneResult.status !== 200) {
           return 2;

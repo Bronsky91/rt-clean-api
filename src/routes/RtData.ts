@@ -1,25 +1,23 @@
 import { Request, Response, Router } from "express";
 import { createDatabase } from "../rt-data/create-database";
-import { connectToDatabase } from "../rt-data/connect-to-database";
 import {
-  RedtailContactUpdate,
-  RedtailSettingsData,
-} from "src/interfaces/redtail.interface";
+  RedtailContactRec,
+} from "src/interfaces/redtail-contact.interface";
 import { isTokenAuth } from "@shared/utils/tokenAuth";
 import UserModel, { IUser } from "src/models/User.model";
-import logger from "@shared/Logger";
 import { v4 as uuid } from "uuid";
-import RtDatabaseModel from "src/models/RtDatabase.model";
 import { getContactsByPage } from "src/rt-api/get-contacts-by-page";
 import { getContactById } from "src/rt-api/get-contact-by-id";
 import { postContact } from "src/rt-api/post-contact";
-import { settings } from "cluster";
 import { getStatuses } from "src/rt-api/get-statuses";
 import { getCategories } from "src/rt-api/get-categories";
 import { getSources } from "src/rt-api/get-sources";
 import { getSalutations } from "src/rt-api/get-salutations";
 import { getServicingAdvisors } from "src/rt-api/get-servicing-advisors";
 import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
+import { RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
+import { RedtailContactUpdate } from 'src/interfaces/redtail-contact-update.interface';
+import { RedtailSettingsData } from 'src/interfaces/redtail-settings.interface';
 
 // Init shared
 const router = Router();
@@ -84,8 +82,8 @@ router.post(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const results = await getContactById(userKey, req.body.id);
-      res.json(results.data);
+      const redtailContact: RedtailContactRec = await getContactById(userKey, req.body.id)
+      res.json(redtailContact);
     } else {
       // Redtail Auth Isn't Setup
       res.sendStatus(401);
@@ -94,31 +92,9 @@ router.post(
   }
 );
 
-/******************************************************************************
- *         Get Specific Page of Contacts - "POST /api/rt/get-contacts-page"
- ******************************************************************************/
-
-router.post(
-  "/get-contacts-page",
-  isTokenAuth,
-  async (req: Request, res: Response) => {
-    const user: IUser = req.user as IUser;
-    const userKey: string | undefined =
-      user.rtUserkey ||
-      (await UserModel.findOne({ email: user.email }))?.rtUserkey;
-    if (userKey) {
-      const contacts = await getContactsByPage(userKey, req.body.page);
-      res.json({ contacts });
-    } else {
-      // Redtail Auth Isn't Setup
-      res.sendStatus(401);
-    }
-    res.end();
-  }
-);
 
 /******************************************************************************
- *         Get Initial Contacts - "GET /api/rt/get-contacts"
+ *        Get Specific Page of Contacts - "GET /api/rt/get-contacts"
  ******************************************************************************/
 
 router.get(
@@ -130,8 +106,9 @@ router.get(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const contacts = await getContactsByPage(userKey, 1);
-      res.json({ contacts });
+      const page: number = Number(req.query.page)
+      const data: RedtailContactListRec = await getContactsByPage(userKey, page);
+      res.json(data);
     } else {
       // Redtail Auth Isn't Setup
       res.sendStatus(401);
@@ -149,15 +126,14 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
   const userKey: string | undefined =
     user.rtUserkey ||
     (await UserModel.findOne({ email: user.email }))?.rtUserkey;
-
-  const settingsData: RedtailSettingsData = {
+    const settingsData: RedtailSettingsData = {
     statuses: [],
     categories: [],
     sources: [],
     salutations: [],
     servicingAdvisors: [],
     writingAdvisors: [],
-    gender: [{ Gender: "Male" }, { Gender: "Female" }, { Gender: "Unknown" }],
+    gender: [{ id: "Male", name: "Male" }, { id: "Female", name: "Female" }, { id: "Unknown", name: "Unknown" }],
     addressTypes: [
       { Description: "Home", TypeID: "H" },
       { Description: "Mailing", TypeID: "M" },
@@ -179,7 +155,8 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
       { Description: "Work", TypeID: "WK" },
     ],
   };
-
+  
+  
   if (userKey) {
     settingsData.statuses = await getStatuses(userKey);
     settingsData.categories = await getCategories(userKey);
@@ -187,7 +164,7 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     settingsData.salutations = await getSalutations(userKey);
     settingsData.servicingAdvisors = await getServicingAdvisors(userKey);
     settingsData.writingAdvisors = await getWritingAdvisors(userKey);
-
+    
     res.json(settingsData);
   } else {
     // Redtail Auth Isn't Setup

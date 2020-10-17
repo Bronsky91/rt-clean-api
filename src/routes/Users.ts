@@ -36,7 +36,7 @@ router.post(
 
     const authStatus = await authRedtail(username, password)
       .then((rtResponse) => {
-        const rtUserkey = rtResponse.data["UserKey"];
+        const rtUserkey: string = rtResponse.data["user_key"];
 
         UserModel.updateOne(
           { email: user.email },

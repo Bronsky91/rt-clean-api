@@ -1,14 +1,14 @@
-import { REDTAIL_API_URL } from "@shared/constants";
+import { REDTAIL_TWAPI_URL } from "@shared/constants";
 import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
-import { RedtailWritingAdvisor } from "src/interfaces/redtail.interface";
+import { RedtailList } from 'src/interfaces/redtail-settings.interface';
 
 export const getWritingAdvisors = async (
   userKey: string
-): Promise<RedtailWritingAdvisor[]> => {
+): Promise<RedtailList[]> => {
   const result = await Axios.get(
-    REDTAIL_API_URL + "/settings/wal",
+    REDTAIL_TWAPI_URL + "/lists/writing_advisors",
     createRtApiConfig(userKey)
   );
-  return result.data;
+  return result.data.writing_advisors;
 };
