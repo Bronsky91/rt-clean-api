@@ -15,9 +15,10 @@ import { getSources } from "src/rt-api/get-sources";
 import { getSalutations } from "src/rt-api/get-salutations";
 import { getServicingAdvisors } from "src/rt-api/get-servicing-advisors";
 import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
-import { RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
+import { ContactsEntity, RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
 import { RedtailContactUpdate } from 'src/interfaces/redtail-contact-update.interface';
 import { RedtailSettingsData } from 'src/interfaces/redtail-settings.interface';
+import { RedtailSearchParam, searchContactsByParam } from 'src/rt-api/search-contact';
 
 // Init shared
 const router = Router();
@@ -108,6 +109,30 @@ router.get(
     if (userKey) {
       const page: number = Number(req.query.page)
       const data: RedtailContactListRec = await getContactsByPage(userKey, page);
+      res.json(data);
+    } else {
+      // Redtail Auth Isn't Setup
+      res.sendStatus(401);
+    }
+    res.end();
+  }
+);
+
+/******************************************************************************
+ *        POST Search Contacts by a single Param - "GET /api/rt/search-contacts"
+ ******************************************************************************/
+
+router.post(
+  "/search-contacts",
+  // isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const userKey: string | undefined = '233C28BE-0ADE-4092-A2D3-55A59391FBF3'
+      // user.rtUserkey ||
+      // (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+    if (userKey) {
+      const params: RedtailSearchParam = {category_id: 3}
+      const data = await searchContactsByParam(userKey, params);
       res.json(data);
     } else {
       // Redtail Auth Isn't Setup

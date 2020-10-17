@@ -1,5 +1,5 @@
 export interface RedtailContactListRec {
-  contacts?: (ContactsEntity)[] | null;
+  contacts: (ContactsEntity)[] ;
   meta: Meta;
 }
 export interface ContactsEntity {

@@ -11,6 +11,9 @@
     "sourceMap": true,
     "strict": true,
     "target": "es6",
+    "lib": [
+      "es2019"
+    ],
     "moduleResolution": "node",
     "paths": {
       "@daos/*": ["src/daos/*"],

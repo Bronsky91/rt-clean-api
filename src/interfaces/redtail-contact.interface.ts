@@ -1,5 +1,5 @@
 // Used when RECEIVING data from Redtail
-export interface RedtailContactListRec {
+export interface RedtailContactMasterRec {
   Age: number;
   Category: string;
   CategoryID: number;
