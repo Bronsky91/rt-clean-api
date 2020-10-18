@@ -163,7 +163,7 @@ export interface FilterData {
   selectedIds: number[];
 }
 
-export interface ContactList {
+export interface ContactListEntry {
   id: number;
   last_name: string;
 }

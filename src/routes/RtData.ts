@@ -14,8 +14,7 @@ import { getSalutations } from "src/rt-api/get-salutations";
 import { getServicingAdvisors } from "src/rt-api/get-servicing-advisors";
 import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
 import {
-  ContactList,
-  ContactsEntity,
+  ContactListEntry,
   RedtailContactListRec,
   RedtailSearchParam,
 } from "src/interfaces/redtail-contact-list.interface";
@@ -169,7 +168,7 @@ router.post(
         return flatContactList.filter((c) => c.id === contactId)[0];
       });
 
-      const filteredContactList: ContactList[] = uniqueContactList
+      const filteredContactList: ContactListEntry[] = uniqueContactList
         .filter((contact) => {
           for (const [key, values] of Object.entries(params)) {
             // Contact must have either category AND either SourceID
