@@ -36,7 +36,10 @@ router.post(
 
     const authStatus = await authRedtail(username, password)
       .then((rtResponse) => {
-        const rtUserkey: string = rtResponse.data["user_key"];
+        console.log(rtResponse.data);
+        const rtUserkey: string = rtResponse.data.authenticated_user.user_key;
+
+        console.log(rtUserkey);
 
         UserModel.updateOne(
           { email: user.email },
@@ -76,7 +79,7 @@ router.get(
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
     const dbUser = await UserModel.findOne({ email: user.email });
-    res.json({ redtailAuth: !!dbUser?.rtUserkey });
+    res.json({ rtAuth: !!dbUser?.rtUserkey });
   }
 );
 
