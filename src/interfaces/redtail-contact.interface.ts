@@ -1,5 +1,5 @@
 // Used when RECEIVING data from Redtail
-export interface RedtailContactMasterRec {
+export interface RedtailContactRec {
   Age: number;
   Category: string;
   CategoryID: number;
@@ -30,7 +30,7 @@ export interface RedtailContactMasterRec {
   WritingAdvisorID: number;
 }
 
-export interface RedtailContactRec {
+export interface RedtailContactMasterRec {
   Address?: AddressRec[] | null;
   ContactRecord: ContactFieldsRec;
   Internet?: InternetRec[] | null;
