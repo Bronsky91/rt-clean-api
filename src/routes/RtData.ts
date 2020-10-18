@@ -223,11 +223,11 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
       { Description: "Other", TypeID: 3 },
     ],
     phoneTypes: [
-      { Description: "Direct Dial", TypeID: "DD" },
-      { Description: "Fax", TypeID: "WF" },
       { Description: "Home", TypeID: "HM" },
       { Description: "Mobile", TypeID: "CL" },
       { Description: "Other", TypeID: "OT" },
+      { Description: "Direct Dial", TypeID: "DD" },
+      { Description: "Fax", TypeID: "WF" },
       { Description: "Toll Free", TypeID: "TF" },
       { Description: "Work", TypeID: "WK" },
     ],
