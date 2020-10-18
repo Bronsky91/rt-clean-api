@@ -1,4 +1,3 @@
-
 export interface RedtailList {
   id: number;
   name: string;
@@ -10,7 +9,7 @@ export interface RedtailList {
 
 export interface RedtailGender {
   id: string;
-  name: string
+  name: string;
 }
 
 export interface RedtailAddressTypes {

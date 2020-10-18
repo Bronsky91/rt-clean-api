@@ -1,8 +1,6 @@
 import { Request, Response, Router } from "express";
 import { createDatabase } from "../rt-data/create-database";
-import {
-  RedtailContactRec,
-} from "src/interfaces/redtail-contact.interface";
+import { RedtailContactRec } from "src/interfaces/redtail-contact.interface";
 import { isTokenAuth } from "@shared/utils/tokenAuth";
 import UserModel, { IUser } from "src/models/User.model";
 import { v4 as uuid } from "uuid";
@@ -15,10 +13,18 @@ import { getSources } from "src/rt-api/get-sources";
 import { getSalutations } from "src/rt-api/get-salutations";
 import { getServicingAdvisors } from "src/rt-api/get-servicing-advisors";
 import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
-import { ContactsEntity, RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
-import { RedtailContactUpdate } from 'src/interfaces/redtail-contact-update.interface';
-import { RedtailSettingsData } from 'src/interfaces/redtail-settings.interface';
-import { RedtailIdAndLastName, searchContactsByParam } from 'src/rt-api/search-contact';
+import {
+  ContactList,
+  ContactsEntity,
+  RedtailContactListRec,
+  RedtailSearchParam,
+} from "src/interfaces/redtail-contact-list.interface";
+import { RedtailContactUpdate } from "src/interfaces/redtail-contact-update.interface";
+import { RedtailSettingsData } from "src/interfaces/redtail-settings.interface";
+import {
+  RedtailIdAndLastName,
+  searchContactsByParam,
+} from "src/rt-api/search-contact";
 
 // Init shared
 const router = Router();
@@ -83,7 +89,10 @@ router.post(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const redtailContact: RedtailContactRec = await getContactById(userKey, req.body.id)
+      const redtailContact: RedtailContactRec = await getContactById(
+        userKey,
+        req.body.id
+      );
       res.json(redtailContact);
     } else {
       // Redtail Auth Isn't Setup
@@ -92,7 +101,6 @@ router.post(
     res.end();
   }
 );
-
 
 /******************************************************************************
  *        Get Specific Page of Contacts - "GET /api/rt/get-contacts"
@@ -107,8 +115,11 @@ router.get(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const page: number = Number(req.query.page)
-      const data: RedtailContactListRec = await getContactsByPage(userKey, page);
+      const page: number = Number(req.query.page);
+      const data: RedtailContactListRec = await getContactsByPage(
+        userKey,
+        page
+      );
       res.json(data);
     } else {
       // Redtail Auth Isn't Setup
@@ -119,38 +130,38 @@ router.get(
 );
 
 /******************************************************************************
- *        POST Search Contacts by a single Param - "GET /api/rt/search-contacts"
+ *        POST Search Contacts by param filters - "GET /api/rt/search-contacts"
  ******************************************************************************/
-
- 
-export interface RedtailSearchParam {
-  status_id?: number[],
-  category_id?: number[],
-  source_id?: number[],
-}
 
 router.post(
   "/search-contacts",
   // isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    const userKey: string | undefined = '233C28BE-0ADE-4092-A2D3-55A59391FBF3'
-      // user.rtUserkey ||
-      // (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+    const userKey: string | undefined = "233C28BE-0ADE-4092-A2D3-55A59391FBF3";
+    const params: RedtailSearchParam = req.body.data
+      .params as RedtailSearchParam;
+    // user.rtUserkey ||
+    // (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-
-      const params: RedtailSearchParam = {category_id: [2,3], source_id: [4]}
-
-      let contactListPromises: Promise<any[]>[] = []
+      let contactListPromises: Promise<any[]>[] = [];
       for (const [key, values] of Object.entries(params)) {
-        const contactSearchPromises: Promise<any[]>[] = values.map((value: number) => 
-          searchContactsByParam(userKey, {[key]: value})
-        )
-        contactListPromises = [...contactListPromises, ...contactSearchPromises]
+        const contactSearchPromises: Promise<
+          any[]
+        >[] = values.map((value: number) =>
+          searchContactsByParam(userKey, { [key]: value })
+        );
+        contactListPromises = [
+          ...contactListPromises,
+          ...contactSearchPromises,
+        ];
       }
 
-      const contactList = await Promise.all(contactListPromises)
-      const flatContactList = contactList.reduce((acc, val) => acc.concat(val), []);
+      const contactList = await Promise.all(contactListPromises);
+      const flatContactList = contactList.reduce(
+        (acc, val) => acc.concat(val),
+        []
+      );
 
       const uniqueContactList = Array.from(
         new Set(flatContactList.map((contact) => contact.id))
@@ -158,16 +169,18 @@ router.post(
         return flatContactList.filter((c) => c.id === contactId)[0];
       });
 
-      const filteredContactList = uniqueContactList
-        .filter(contact => {
+      const filteredContactList: ContactList[] = uniqueContactList
+        .filter((contact) => {
           for (const [key, values] of Object.entries(params)) {
             // Contact must have either category AND either SourceID
-            if(!values.includes(contact[key])) { return false; }
+            if (!values.includes(contact[key])) {
+              return false;
+            }
           }
           return true;
         })
-        .map(contact => ({id: contact.id, last_name: contact.last_name}))
-        
+        .map((contact) => ({ id: contact.id, last_name: contact.last_name }));
+
       res.json(filteredContactList);
     } else {
       // Redtail Auth Isn't Setup
@@ -186,14 +199,18 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
   const userKey: string | undefined =
     user.rtUserkey ||
     (await UserModel.findOne({ email: user.email }))?.rtUserkey;
-    const settingsData: RedtailSettingsData = {
+  const settingsData: RedtailSettingsData = {
     status_id: [],
     category_id: [],
     source_id: [],
     salutations: [],
     servicingAdvisors: [],
     writingAdvisors: [],
-    gender: [{ id: "Male", name: "Male" }, { id: "Female", name: "Female" }, { id: "Unknown", name: "Unknown" }],
+    gender: [
+      { id: "Male", name: "Male" },
+      { id: "Female", name: "Female" },
+      { id: "Unknown", name: "Unknown" },
+    ],
     addressTypes: [
       { Description: "Home", TypeID: "H" },
       { Description: "Mailing", TypeID: "M" },
@@ -215,8 +232,7 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
       { Description: "Work", TypeID: "WK" },
     ],
   };
-  
-  
+
   if (userKey) {
     settingsData.status_id = await getStatuses(userKey);
     settingsData.category_id = await getCategories(userKey);
@@ -224,7 +240,7 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     settingsData.salutations = await getSalutations(userKey);
     settingsData.servicingAdvisors = await getServicingAdvisors(userKey);
     settingsData.writingAdvisors = await getWritingAdvisors(userKey);
-    
+
     res.json(settingsData);
   } else {
     // Redtail Auth Isn't Setup

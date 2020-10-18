@@ -1,5 +1,5 @@
 export interface RedtailContactListRec {
-  contacts: (ContactsEntity)[] ;
+  contacts: ContactsEntity[];
   meta: Meta;
 }
 export interface ContactsEntity {
@@ -7,7 +7,7 @@ export interface ContactsEntity {
   type: string;
   first_name?: string | null;
   middle_name?: string | null;
-  last_name: string ;
+  last_name: string;
   company_name?: string | null;
   full_name: string;
   nickname?: string | null;
@@ -59,7 +59,7 @@ export interface Family {
   created_at: string;
   updated_at: string;
   deleted: boolean;
-  members?: (MembersEntity)[] | null;
+  members?: MembersEntity[] | null;
 }
 export interface MembersEntity {
   id: number;
@@ -150,4 +150,20 @@ export interface TagMembershipsEntity {
 export interface Meta {
   total_records: number;
   total_pages: number;
+}
+
+export interface RedtailSearchParam {
+  status_id?: number[];
+  category_id?: number[];
+  source_id?: number[];
+}
+
+export interface FilterData {
+  filter: string;
+  selectedIds: number[];
+}
+
+export interface ContactList {
+  id: number;
+  last_name: string;
 }
