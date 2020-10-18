@@ -4,8 +4,8 @@ import Axios from "axios";
 
 export const getContactById = async (userKey: string, id: number) => {
   const result = await Axios.get(
-    REDTAIL_API_URL + `/contacts/${id}/masterv2`,
+    REDTAIL_API_URL + `/contacts/${id}/master`,
     createRtApiConfig(userKey)
   );
-  return result.data
+  return result.data;
 };

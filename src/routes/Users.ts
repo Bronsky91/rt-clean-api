@@ -81,7 +81,13 @@ router.get(
 );
 
 router.get("/auth-check", isTokenAuth, async (req: Request, res: Response) => {
-  res.sendStatus(200);
+  try {
+    const user: IUser = req.user as IUser;
+    const dbUser = await UserModel.findOne({ email: user.email });
+    res.json({ rtAuth: !!dbUser?.rtUserkey });
+  } catch (e) {
+    res.sendStatus(200);
+  }
 });
 
 /******************************************************************************
