@@ -90,5 +90,45 @@ export const postContact = async (
     });
   }
 
+  if (contact.contactFieldsToDelete){
+    console.log(contact.contactFieldsToDelete)
+    if(contact.contactFieldsToDelete.emailAddresses){
+      for(const internetRecId of contact.contactFieldsToDelete.emailAddresses){
+        const internetResult = await Axios({
+          method: "post",
+          url:
+            REDTAIL_API_URL +
+            `/contacts/${contact.ContactRecord.ClientID}/internets/${internetRecId}?Type=email`,
+          headers: createRtApiHeaders(userKey),
+        });
+        console.log(internetResult.status)
+      }
+    }
+    if(contact.contactFieldsToDelete.phoneNumbers){
+      for(const phoneRecId of contact.contactFieldsToDelete.phoneNumbers){
+        const phoneResult = await Axios({
+          method: "post",
+          url:
+            REDTAIL_API_URL +
+            `/contacts/${contact.ContactRecord.ClientID}/phones/${phoneRecId}`,
+          headers: createRtApiHeaders(userKey),
+        });
+        console.log(phoneResult.status)
+      }
+    }
+    if(contact.contactFieldsToDelete.streetAddresses){
+      for(const addressRecId of contact.contactFieldsToDelete.streetAddresses){
+        const addressResult = await Axios({
+          method: "post",
+          url:
+            REDTAIL_API_URL +
+            `/contacts/${contact.ContactRecord.ClientID}/addresses/${addressRecId}`,
+          headers: createRtApiHeaders(userKey),
+        });
+        console.log(addressResult.status)
+      }
+    }
+  }
+
   return 0;
 };

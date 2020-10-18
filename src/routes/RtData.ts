@@ -219,8 +219,8 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     ],
     internetTypes: [
       { Description: "Home", TypeID: 1 },
-      { Description: "Work", TypeID: 2 },
-      { Description: "Other", TypeID: 3 },
+      { Description: "Work", TypeID: 3 },
+      { Description: "Other", TypeID: 4 },
     ],
     phoneTypes: [
       { Description: "Home", TypeID: "HM" },

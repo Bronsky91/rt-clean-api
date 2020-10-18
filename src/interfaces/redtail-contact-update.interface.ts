@@ -4,6 +4,11 @@ export interface RedtailContactUpdate {
   ContactRecord: ContactFieldsUpdate;
   Internet?: InternetUpdate[] | null;
   Phone?: PhoneUpdate[] | null;
+  contactFieldsToDelete: {
+    emailAddresses?: number[],
+    streetAddresses?: number[],
+    phoneNumbers?: number[]
+  }
 }
 
 export interface AddressUpdate {
