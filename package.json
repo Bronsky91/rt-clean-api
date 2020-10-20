@@ -2,7 +2,8 @@
   "name": "rt-clean-api",
   "version": "0.0.0",
   "scripts": {
-    "build": "node build.js",
+    "build": "rm -rf dist/ && tsc",
+    "heroku-postbuild": "yarn run build",
     "lint": "tslint --project \"tsconfig.json\"",
     "start": "node -r module-alias/register ./dist --env=production",
     "dev": "nodemon",
