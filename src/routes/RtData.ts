@@ -178,7 +178,7 @@ router.post(
           }
           return true;
         })
-        .map((contact) => ({ id: contact.id, last_name: contact.last_name }));
+        .map((contact) => ({ id: contact.id, lastName: contact.last_name }));
 
       res.json(filteredContactList);
     } else {

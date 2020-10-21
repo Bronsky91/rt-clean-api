@@ -165,5 +165,5 @@ export interface FilterData {
 
 export interface ContactListEntry {
   id: number;
-  last_name: string;
+  lastName: string;
 }
