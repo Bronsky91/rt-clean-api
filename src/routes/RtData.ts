@@ -21,7 +21,6 @@ import {
 import { RedtailContactUpdate } from "src/interfaces/redtail-contact-update.interface";
 import { RedtailSettingsData } from "src/interfaces/redtail-settings.interface";
 import {
-  RedtailIdAndLastName,
   searchContactsByParam,
 } from "src/rt-api/search-contact";
 

@@ -11,13 +11,12 @@
     "sourceMap": true,
     "strict": true,
     "target": "es6",
+    "resolveJsonModule": true,
     "lib": [
       "es2019"
     ],
     "moduleResolution": "node",
     "paths": {
-      "@daos/*": ["src/daos/*"],
-      "@entities/*": ["src/entities/*"],
       "@shared/*": ["src/shared/*"],
       "@server": ["src/Server"]
     },
