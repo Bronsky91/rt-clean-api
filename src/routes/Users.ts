@@ -4,13 +4,12 @@ import passport from "passport";
 import {
   CLIENT_HOME_PAGE_URL,
   CLIENT_LOGIN_PAGE_URL,
-  paramMissingError,
-} from "@shared/constants";
-import UserModel, { IUser } from "src/models/User.model";
-import { GoogleUser } from "src/interfaces/google.interface";
+} from "../shared/constants";
+import UserModel, { IUser } from "../models/User.model"
 import { findOrCreateGoogleUser } from "../shared/utils/findOrCreateGoogleUser";
-import { isTokenAuth, signToken } from "@shared/utils/tokenAuth";
-import { authRedtail } from "src/rt-api/auth";
+import { isTokenAuth, signToken } from "../shared/utils/tokenAuth";
+import { authRedtail } from '../rt-api/auth';
+import { GoogleUser } from 'src/interfaces/google.interface';
 // Init shared
 const router = Router();
 

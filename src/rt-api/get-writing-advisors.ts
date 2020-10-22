@@ -1,7 +1,8 @@
-import { REDTAIL_TWAPI_URL } from "@shared/constants";
-import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
+
 import Axios from "axios";
-import { RedtailList } from 'src/interfaces/redtail-settings.interface';
+import { RedtailList } from '../interfaces/redtail-settings.interface';
+import { REDTAIL_TWAPI_URL } from '../shared/constants';
+import { createRtApiConfig } from '../shared/utils/createRtApiConfig';
 
 export const getWritingAdvisors = async (
   userKey: string

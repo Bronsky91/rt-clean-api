@@ -5,7 +5,7 @@
     "build": "rm -rf dist/ && tsc",
     "heroku-postbuild": "yarn run build",
     "lint": "tslint --project \"tsconfig.json\"",
-    "start": "node -r ts-node/register -r tsconfig-paths/register dist/src/index.js",
+    "start": "node dist/src/index.js",
     "dev": "nodemon",
     "test": "nodemon --config ./spec/nodemon.json"
   },
@@ -51,9 +51,6 @@
     "nodejs-base64": "^1.0.3",
     "passport": "^0.4.1",
     "passport-google-oauth": "^2.0.0",
-    "ts-node": "^9.0.0",
-    "tsconfig-paths": "^3.9.0",
-    "tslib": "^2.0.3",
     "uuid": "^8.3.0",
     "winston": "^3.3.3"
   },

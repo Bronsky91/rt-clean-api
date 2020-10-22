@@ -1,7 +1,7 @@
-import {  REDTAIL_TWAPI_URL } from "@shared/constants";
-import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
-import {  ContactsEntity, RedtailContactListRec } from 'src/interfaces/redtail-contact-list.interface';
+import { ContactsEntity, RedtailContactListRec } from '../interfaces/redtail-contact-list.interface';
+import { REDTAIL_TWAPI_URL } from '../shared/constants';
+import { createRtApiConfig } from '../shared/utils/createRtApiConfig';
 
 export const searchContactsByParam = async (
   userKey: string,

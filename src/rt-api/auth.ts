@@ -1,5 +1,6 @@
-import { REDTAIL_API_KEY, REDTAIL_TWAPI_URL } from "@shared/constants";
+
 import axios, { AxiosResponse } from "axios";
+import { REDTAIL_API_KEY, REDTAIL_TWAPI_URL } from '../shared/constants';
 
 const { base64encode } = require("nodejs-base64");
 

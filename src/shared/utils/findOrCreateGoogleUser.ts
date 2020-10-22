@@ -1,5 +1,5 @@
 import { GoogleProfile } from "src/interfaces/google.interface";
-import UserModel, { IUser } from "src/models/User.model";
+import UserModel, { IUser } from "../../models/User.model"
 
 export const findOrCreateGoogleUser = async (
   profile: GoogleProfile

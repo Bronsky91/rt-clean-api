@@ -1,6 +1,7 @@
-import { MY_SQL_HOST, MY_SQL_USER, MY_SQL_PASSWORD } from "@shared/constants";
+
 import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
+import { MY_SQL_HOST, MY_SQL_PASSWORD, MY_SQL_USER } from '../shared/constants';
 import { dumpImporter } from "./dump-importer";
 
 export const createDatabase = async (database: string, filePath: string) => {

@@ -16,10 +16,6 @@
       "es2019"
     ],
     "moduleResolution": "node",
-    "paths": {
-      "@shared/*": ["src/shared/*"],
-      "@server": ["src/Server"]
-    },
     "types": ["node"],
     "typeRoots": ["node_modules/@types"]
   },

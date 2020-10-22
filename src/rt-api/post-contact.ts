@@ -1,8 +1,8 @@
-import { REDTAIL_API_URL } from "@shared/constants";
-import logger from "@shared/Logger";
-import { createRtApiHeaders } from "@shared/utils/createRtApiConfig";
 import Axios from "axios";
-import { AddressUpdate, InternetUpdate, PhoneUpdate, RedtailContactUpdate } from 'src/interfaces/redtail-contact-update.interface';
+import { AddressUpdate, InternetUpdate, PhoneUpdate, RedtailContactUpdate } from '../interfaces/redtail-contact-update.interface';
+import { REDTAIL_API_URL } from '../shared/constants';
+import logger from '../shared/Logger';
+import { createRtApiHeaders } from '../shared/utils/createRtApiConfig';
 
 export const postContact = async (
   userKey: string,

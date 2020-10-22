@@ -1,4 +1,4 @@
-import { REDTAIL_API_KEY } from "@shared/constants";
+import { REDTAIL_API_KEY } from '../constants';
 
 const { base64encode } = require("nodejs-base64");
 

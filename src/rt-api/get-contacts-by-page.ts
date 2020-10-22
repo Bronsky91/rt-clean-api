@@ -1,6 +1,7 @@
-import {  REDTAIL_TWAPI_URL } from "@shared/constants";
-import { createRtApiConfig } from "@shared/utils/createRtApiConfig";
+
 import Axios from "axios";
+import { REDTAIL_TWAPI_URL } from '../shared/constants';
+import { createRtApiConfig } from '../shared/utils/createRtApiConfig';
 
 export const getContactsByPage = async (
   userKey: string,

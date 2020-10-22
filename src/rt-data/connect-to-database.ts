@@ -1,10 +1,6 @@
-import {
-  MY_SQL_HOST,
-  MY_SQL_PASSWORD,
-  MY_SQL_USER,
-} from "@shared/constants";
 import { createConnection, Connection } from "mysql";
 import { promisify } from "util";
+import { MY_SQL_HOST, MY_SQL_PASSWORD, MY_SQL_USER } from '../shared/constants';
 
 //! If the db.close() fails the database doesn't exist
 

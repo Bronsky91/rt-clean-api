@@ -1,28 +1,22 @@
 import { Request, Response, Router } from "express";
 import { createDatabase } from "../rt-data/create-database";
-import { RedtailContactRec } from "src/interfaces/redtail-contact.interface";
-import { isTokenAuth } from "@shared/utils/tokenAuth";
-import UserModel, { IUser } from "src/models/User.model";
+import UserModel, { IUser } from "../models/User.model";
 import { v4 as uuid } from "uuid";
-import { getContactsByPage } from "src/rt-api/get-contacts-by-page";
-import { getContactById } from "src/rt-api/get-contact-by-id";
-import { postContact } from "src/rt-api/post-contact";
-import { getStatuses } from "src/rt-api/get-statuses";
-import { getCategories } from "src/rt-api/get-categories";
-import { getSources } from "src/rt-api/get-sources";
-import { getSalutations } from "src/rt-api/get-salutations";
-import { getServicingAdvisors } from "src/rt-api/get-servicing-advisors";
-import { getWritingAdvisors } from "src/rt-api/get-writing-advisors";
-import {
-  ContactListEntry,
-  RedtailContactListRec,
-  RedtailSearchParam,
-} from "src/interfaces/redtail-contact-list.interface";
-import { RedtailContactUpdate } from "src/interfaces/redtail-contact-update.interface";
-import { RedtailSettingsData } from "src/interfaces/redtail-settings.interface";
-import {
-  searchContactsByParam,
-} from "src/rt-api/search-contact";
+import { isTokenAuth } from '../shared/utils/tokenAuth';
+import { getContactById } from '../rt-api/get-contact-by-id';
+import { RedtailContactRec } from '../interfaces/redtail-contact.interface';
+import { ContactListEntry, RedtailContactListRec, RedtailSearchParam } from '../interfaces/redtail-contact-list.interface';
+import { getContactsByPage } from '../rt-api/get-contacts-by-page';
+import { searchContactsByParam } from '../rt-api/search-contact';
+import { RedtailSettingsData } from '../interfaces/redtail-settings.interface';
+import { getStatuses } from '../rt-api/get-statuses';
+import { getCategories } from '../rt-api/get-categories';
+import { getSources } from '../rt-api/get-sources';
+import { getSalutations } from '../rt-api/get-salutations';
+import { getServicingAdvisors } from '../rt-api/get-servicing-advisors';
+import { getWritingAdvisors } from '../rt-api/get-writing-advisors';
+import { RedtailContactUpdate } from '../interfaces/redtail-contact-update.interface';
+import { postContact } from '../rt-api/post-contact';
 
 // Init shared
 const router = Router();

@@ -1,6 +1,5 @@
 import cookieParser from "cookie-parser";
 import morgan from "morgan";
-import path from "path";
 import helmet from "helmet";
 import fileUpload from "express-fileupload";
 import cors from "cors";
@@ -11,8 +10,8 @@ import { StatusCodes } from "http-status-codes";
 import "express-async-errors";
 
 import BaseRouter from "./routes";
-import logger from "@shared/Logger";
-import { MONGO_URL } from "@shared/constants";
+import logger from "./shared/Logger";
+import { MONGO_URL } from "./shared/constants";
 import auth from "./shared/auth";
 import passport from "passport";
 import cookieSession from "cookie-session";

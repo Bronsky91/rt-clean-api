@@ -1,7 +1,7 @@
-import { IUser } from "src/models/User.model";
+import { IUser } from "../../models/User.model"
 import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "@shared/constants";
 import { NextFunction, Request, Response } from "express";
+import { JWT_SECRET } from '../constants';
 
 // Middleware to check if the user is authenticated
 export const isTokenAuth = (
