@@ -11,7 +11,7 @@ import "express-async-errors";
 
 import BaseRouter from "./routes";
 import logger from "./shared/Logger";
-import { MONGO_URL } from "./shared/constants";
+import { CLIENT_HOME_PAGE_URL, MONGO_URL } from "./shared/constants";
 import auth from "./shared/auth";
 import passport from "passport";
 import cookieSession from "cookie-session";
@@ -46,7 +46,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: CLIENT_HOME_PAGE_URL,
     credentials: true,
   })
 );

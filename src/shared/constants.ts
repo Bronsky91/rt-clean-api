@@ -11,8 +11,8 @@ export const MY_SQL_HOST = process.env.MY_SQL_HOST || "";
 export const MY_SQL_USER = process.env.MY_SQL_USER || "";
 export const MY_SQL_PASSWORD = process.env.MY_SQL_PASSWORD || "";
 
-export const CLIENT_HOME_PAGE_URL = "http://localhost:3000/";
-export const CLIENT_LOGIN_PAGE_URL = "http://localhost:3000/login";
+export const CLIENT_HOME_PAGE_URL = process.env.CLIENT_HOME_PAGE_URL || "";
+export const CLIENT_LOGIN_PAGE_URL = process.env.CLIENT_LOGIN_PAGE_URL || "";
 
 export const REDTAIL_API_KEY = process.env.REDTAIL_API_KEY || "";
 export const REDTAIL_API_URL = "http://api2.redtailtechnology.com/crm/v1/rest";
