@@ -17,3 +17,5 @@ export const CLIENT_LOGIN_PAGE_URL = process.env.CLIENT_LOGIN_PAGE_URL || "";
 export const REDTAIL_API_KEY = process.env.REDTAIL_API_KEY || "";
 export const REDTAIL_API_URL = "http://api2.redtailtechnology.com/crm/v1/rest";
 export const REDTAIL_TWAPI_URL = "https://smf.crm3.redtailtechnology.com/api/public/v1";
+
+export const APP_DOMAIN = process.env.APP_DOMAIN || "";

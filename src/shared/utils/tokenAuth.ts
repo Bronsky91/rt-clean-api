@@ -10,10 +10,6 @@ export const isTokenAuth = (
   next: NextFunction
 ) => {
   const headersCookie = req.headers.cookie;
-  console.log(req.hostname);
-  console.log(req.headers);
-  console.log(req.cookies);
-  console.log(req.signedCookies);
   const token: string | undefined = req.cookies.jwt || headersCookie;
   if (token) {
     const user: IUser = verifyToken(token);

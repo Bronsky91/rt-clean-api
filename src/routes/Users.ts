@@ -2,6 +2,7 @@ import { Request, Response, Router } from "express";
 import { StatusCodes } from "http-status-codes";
 import passport from "passport";
 import {
+  APP_DOMAIN,
   CLIENT_HOME_PAGE_URL,
   CLIENT_LOGIN_PAGE_URL,
 } from "../shared/constants";
@@ -67,7 +68,7 @@ router.get(
       .status(200)
       .cookie("jwt", signToken(user), {
         httpOnly: true,
-        domain: "linkpointsolutions.com",
+        domain: APP_DOMAIN,
       })
       .redirect(CLIENT_HOME_PAGE_URL);
   }
