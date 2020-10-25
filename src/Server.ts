@@ -50,7 +50,11 @@ app.use(
 
 app.use(
   cors({
-    origin: CLIENT_HOME_PAGE_URL,
+    origin: [
+      CLIENT_HOME_PAGE_URL,
+      `http://redtail-clean-api.linkpointsolutions.com`,
+      `http://redtail-clean-up.linkpointsolutions.com/`,
+    ],
     credentials: true,
   })
 );
