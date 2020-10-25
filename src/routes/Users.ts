@@ -65,9 +65,7 @@ router.get(
 
     return res
       .status(200)
-      .cookie("jwt", signToken(user), {
-        httpOnly: true,
-      })
+      .cookie("jwt", signToken(user))
       .redirect(CLIENT_HOME_PAGE_URL);
   }
 );

@@ -37,7 +37,7 @@ app.use(
     preserveExtension: true,
   })
 );
-app.enable('trust proxy');
+
 // cookieSession config
 app.use(
   cookieSession({
