@@ -1,7 +1,7 @@
-import { IUser } from "../../models/User.model"
+import { IUser } from "../../models/User.model";
 import jwt from "jsonwebtoken";
 import { NextFunction, Request, Response } from "express";
-import { JWT_SECRET } from '../constants';
+import { JWT_SECRET } from "../constants";
 
 // Middleware to check if the user is authenticated
 export const isTokenAuth = (
@@ -10,7 +10,9 @@ export const isTokenAuth = (
   next: NextFunction
 ) => {
   const headersCookie = req.headers.cookie;
+  console.log(headersCookie);
   const token: string | undefined = req.cookies.jwt || headersCookie;
+  console.log(token);
   if (token) {
     const user: IUser = verifyToken(token);
     if (user) {
