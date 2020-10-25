@@ -67,6 +67,7 @@ router.get(
       .status(200)
       .cookie("jwt", signToken(user), {
         httpOnly: true,
+        domain: "linkpointsolutions.com",
       })
       .redirect(CLIENT_HOME_PAGE_URL);
   }
