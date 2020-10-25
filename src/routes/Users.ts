@@ -5,11 +5,11 @@ import {
   CLIENT_HOME_PAGE_URL,
   CLIENT_LOGIN_PAGE_URL,
 } from "../shared/constants";
-import UserModel, { IUser } from "../models/User.model"
+import UserModel, { IUser } from "../models/User.model";
 import { findOrCreateGoogleUser } from "../shared/utils/findOrCreateGoogleUser";
 import { isTokenAuth, signToken } from "../shared/utils/tokenAuth";
-import { authRedtail } from '../rt-api/auth';
-import { GoogleUser } from 'src/interfaces/google.interface';
+import { authRedtail } from "../rt-api/auth";
+import { GoogleUser } from "src/interfaces/google.interface";
 // Init shared
 const router = Router();
 
@@ -65,7 +65,9 @@ router.get(
 
     return res
       .status(200)
-      .cookie("jwt", signToken(user))
+      .cookie("jwt", signToken(user), {
+        httpOnly: true,
+      })
       .redirect(CLIENT_HOME_PAGE_URL);
   }
 );

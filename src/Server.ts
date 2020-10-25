@@ -38,6 +38,8 @@ app.use(
   })
 );
 
+app.set("trust proxy", 1); // trust first proxy
+
 // cookieSession config
 app.use(
   cookieSession({
@@ -45,6 +47,7 @@ app.use(
     keys: ["funeveryday"], // TODO: Make random string
   })
 );
+
 app.use(
   cors({
     origin: CLIENT_HOME_PAGE_URL,
