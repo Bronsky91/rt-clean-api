@@ -56,7 +56,7 @@ export const postContact = async (
   if (contact.Emails) {
     contact.Emails.forEach(async (email: EmailUpdate) => {
       try {
-        const internetResult = await Axios({
+        const emailResult = await Axios({
           method: "put",
           url:
             REDTAIL_TWAPI_URL +
@@ -64,7 +64,7 @@ export const postContact = async (
           headers: createRtApiHeaders(userKey),
           data: email,
         });
-        if (internetResult.status !== 200) {
+        if (emailResult.status !== 200) {
           return 3;
         }
       } catch (e) {
@@ -128,7 +128,6 @@ export const postContact = async (
             `/contacts/${contact.ContactRecord.id}/addresses/${addressId}`,
           headers: createRtApiHeaders(userKey),
         });
-        console.log(addressResult.status);
       }
     }
     if (contact.contactFieldsToDelete.emails) {
@@ -140,7 +139,6 @@ export const postContact = async (
             `/contacts/${contact.ContactRecord.id}/emails/${emailId}`,
           headers: createRtApiHeaders(userKey),
         });
-        console.log(emailResult.status);
       }
     }
     if (contact.contactFieldsToDelete.phones) {
@@ -152,7 +150,6 @@ export const postContact = async (
             `/contacts/${contact.ContactRecord.id}/phones/${phoneId}`,
           headers: createRtApiHeaders(userKey),
         });
-        console.log(phoneResult.status);
       }
     }
     if (contact.contactFieldsToDelete.urls) {
@@ -164,7 +161,6 @@ export const postContact = async (
             `/contacts/${contact.ContactRecord.id}/urls/${UrlId}`,
           headers: createRtApiHeaders(userKey),
         });
-        console.log(urlResult.status);
       }
     }
   }
