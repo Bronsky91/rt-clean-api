@@ -1,138 +1,118 @@
 // Used when RECEIVING data from Redtail
 export interface RedtailContactRec {
-  Age: number;
-  Category: string;
-  CategoryID: number;
-  ClientID: number;
-  ClientSince: string;
-  ClientType: string;
-  DateofBirth: string;
-  DateofBirthReminder: boolean;
-  FirstName: string;
-  Gender: string;
-  InputBy: string;
-  InputByID: number;
-  InputDate: string;
-  LastName: string;
-  MaritalDate: string;
-  MaritalStatus: string;
-  MiddleName: string;
-  Name: string;
-  ReferredBy: string;
-  ServicingAdvisor: string;
-  ServicingAdvisorID: number;
-  Source: string;
-  SourceID: number;
-  Status: string;
-  StatusID: number;
-  TaxID: string;
-  WritingAdvisor: string;
-  WritingAdvisorID: number;
-}
-
-export interface RedtailContactMasterRec {
-  Address?: AddressRec[] | null;
-  ContactRecord: ContactFieldsRec;
-  Internet?: InternetRec[] | null;
-  Phone?: PhoneRec[] | null;
+  id: number;
+  type: string;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  company_name?: null;
+  full_name: string;
+  nickname: string;
+  suffix_id?: null;
+  suffix?: null;
+  job_title: string;
+  favorite: boolean;
+  deleted: boolean;
+  created_at: string; //"2020-09-10T23:32:29.000Z",
+  updated_at: string; //"2020-10-28T20:52:54.000Z",
+  salutation_id: number;
+  salutation: string;
+  source_id: number;
+  source: string;
+  status_id: number;
+  status: string;
+  category_id: number;
+  category: string;
+  gender_id: number;
+  gender: string;
+  spouse_name?: null;
+  tax_id?: null;
+  dob: string; //"1995-10-01",
+  death_date?: null;
+  client_since?: null;
+  client_termination_date?: null;
+  marital_status_id: number; //7,
+  marital_status: string; //"Unknown",
+  marital_date?: null;
+  employer_id: number;
+  employer?: null;
+  designation: string;
+  referred_by?: null;
+  servicing_advisor_id: number;
+  servicing_advisor: string;
+  writing_advisor_id: number;
+  writing_advisor: string;
+  added_by: number;
+  addresses?: AddressRec[] | null;
+  phones?: PhoneRec[] | null;
+  emails?: EmailRec[] | null;
+  urls?: UrlRec[] | null;
 }
 
 export interface AddressRec {
-  Address1: string;
-  Address2: string;
-  City: string;
-  ClientID: number;
-  Label: string;
-  LastUpdate: string;
-  Preferred: boolean;
-  Primary: boolean;
-  RecAdd: string;
-  RecAddUser: number;
-  RecID: number;
-  SharedAddress: boolean;
-  State: string;
-  Type: string;
-  TypeID: string;
-  Zip: string;
-  Zip4?: null;
-}
-export interface ContactFieldsRec {
-  Age: number;
-  AnniversaryDate: string;
-  Category: string;
-  CategoryID: number;
-  ClientID: number;
-  ClientSince: string;
-  ClientSinceDate: string;
-  ClientType: string;
-  Company: string;
-  CompanyID: number;
-  DatabaseID: number;
-  DateOfBirth: string;
-  Deceased: string;
-  Deleted: boolean;
-  DeletedOn: string;
-  Designation: string;
-  Family: boolean;
-  FamilyHeadID: number;
-  Familyname: string;
-  Firstname: string;
-  Gender: string;
-  InputBy?: null;
-  InputByID: number;
-  InputDate: string;
-  JobTitle: string;
-  LastUpdate: string;
-  Lastname: string;
-  MaritalDate: string;
-  MaritalStatus: string;
-  Middlename: string;
-  Name: string;
-  Nickname: string;
-  ReferredBy: string;
-  Relationship?: null;
-  Salutation: string;
-  ServicingAdvisor: string;
-  ServicingAdvisorID: number;
-  Source: string;
-  SourceID: number;
-  Status: string;
-  StatusID: number;
-  Suffix: string;
-  TaxID: string;
-  WritingAdvisor: string;
-  WritingAdvisorID: number;
+  id: number;
+  addressable_id: number;
+  addressable_type: string; //"Crm::Contact"
+  street_address: string;
+  secondary_address: string;
+  city: string;
+  state: string;
+  zip: string;
+  country: string;
+  address_type: number;
+  address_type_description: string;
+  custom_type_title: string;
+  description: string;
+  is_primary: boolean;
+  is_preferred: boolean;
+  deleted: boolean;
+  created_at: string; //"2020-10-13T20:19:19.000Z",
+  updated_at: string; //"2020-10-28T20:52:55.000Z"
 }
 
-export interface InternetRec {
-  Address: string;
-  ClientID: number;
-  Label: string;
-  LastUpdate: string;
-  Preferred: boolean;
-  Primary: boolean;
-  Priority: boolean;
-  RecAdd: string;
-  RecAddUser: number;
-  RecID: number;
-  Type: string;
-  TypeID: number;
-}
 export interface PhoneRec {
-  ClientID: number;
-  DisplayOrder: number;
-  Extension: string;
-  Label: string;
-  LastUpdate: string;
-  Number: string;
-  Number_Formatted: string;
-  Preferred: boolean;
-  Primary: boolean;
-  RecAdd: string;
-  RecAddUser: number;
-  RecID: number;
-  SharedPhoneNumber: boolean;
-  SpeedDial: string;
-  Type: string;
-  TypeID: string;
+  id: number;
+  callable_id: number;
+  callable_type: string; //"Crm::Contact",
+  country_code: number;
+  number: string;
+  extension?: null;
+  phone_type: number;
+  phone_type_description: string;
+  speed_dial?: null;
+  is_preferred: boolean;
+  is_primary: boolean;
+  custom_type_title?: null;
+  description: string;
+  deleted: boolean;
+  created_at: string; //"2020-09-10T23:32:30.000Z",
+  updated_at: string; //"2020-10-28T20:52:55.000Z"
+}
+
+export interface EmailRec {
+  id: number;
+  emailable_id: number;
+  emailable_type: string; //"Crm::Contact",
+  address: string;
+  email_type: number;
+  email_type_description: string;
+  custom_type_title: string;
+  description: string;
+  is_primary: boolean;
+  is_preferred: boolean;
+  deleted: boolean;
+  created_at: string; //"2020-09-10T23:32:30.000Z",
+  updated_at: string; //"2020-10-28T20:52:55.000Z"
+}
+
+export interface UrlRec {
+  id: number;
+  contact_id: number;
+  address: string;
+  url_type: number;
+  url_type_description: string;
+  custom_type_title: string;
+  deleted: boolean;
+  created_at: string; //"2020-10-13T20:16:07.000Z",
+  updated_at: string; //"2020-10-18T00:18:42.000Z"
 }

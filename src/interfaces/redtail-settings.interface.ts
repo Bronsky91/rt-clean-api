@@ -7,24 +7,9 @@ export interface RedtailList {
   updated_at?: null;
 }
 
-export interface RedtailGender {
-  id: string;
-  name: string;
-}
-
-export interface RedtailAddressTypes {
-  Description: string;
-  TypeID: string;
-}
-
-export interface RedtailInternetTypes {
-  Description: string;
-  TypeID: number;
-}
-
-export interface RedtailPhoneTypes {
-  Description: string;
-  TypeID: string;
+export interface RedtailType {
+  id: number | null;
+  name: string | null;
 }
 
 export interface RedtailSettingsData {
@@ -34,8 +19,9 @@ export interface RedtailSettingsData {
   salutations: RedtailList[];
   servicingAdvisors: RedtailList[];
   writingAdvisors: RedtailList[];
-  gender: RedtailGender[];
-  addressTypes: RedtailAddressTypes[];
-  internetTypes: RedtailInternetTypes[];
-  phoneTypes: RedtailPhoneTypes[];
+  genderTypes: RedtailType[];
+  addressTypes: RedtailType[];
+  emailTypes: RedtailType[];
+  phoneTypes: RedtailType[];
+  urlTypes: RedtailType[];
 }

@@ -1,8 +1,14 @@
 import Axios from "axios";
-import { AddressUpdate, InternetUpdate, PhoneUpdate, RedtailContactUpdate } from '../interfaces/redtail-contact-update.interface';
-import { REDTAIL_API_URL } from '../shared/constants';
-import logger from '../shared/Logger';
-import { createRtApiHeaders } from '../shared/utils/createRtApiConfig';
+import {
+  AddressUpdate,
+  EmailUpdate,
+  PhoneUpdate,
+  UrlUpdate,
+  RedtailContactUpdate,
+} from "../interfaces/redtail-contact-update.interface";
+import { REDTAIL_TWAPI_URL } from "../shared/constants";
+import logger from "../shared/Logger";
+import { createRtApiHeaders } from "../shared/utils/createRtApiConfig";
 
 export const postContact = async (
   userKey: string,
@@ -12,7 +18,7 @@ export const postContact = async (
   try {
     const contactRecordResult = await Axios({
       method: "put",
-      url: REDTAIL_API_URL + `/contacts/${contact.ContactRecord.ClientID}`,
+      url: REDTAIL_TWAPI_URL + `/contacts/${contact.ContactRecord.id}`,
       headers: createRtApiHeaders(userKey),
       data: contact.ContactRecord,
     });
@@ -25,16 +31,16 @@ export const postContact = async (
   }
 
   // If present, update contact's street addresses
-  if (contact.Address) {
-    contact.Address.forEach(async (addressItem: AddressUpdate) => {
+  if (contact.Addresses) {
+    contact.Addresses.forEach(async (address: AddressUpdate) => {
       try {
         const addressResult = await Axios({
           method: "put",
           url:
-            REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/addresses/${addressItem.RecID}`,
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/addresses/${address.id}`,
           headers: createRtApiHeaders(userKey),
-          data: addressItem,
+          data: address,
         });
         if (addressResult.status !== 200) {
           return 2;
@@ -47,41 +53,41 @@ export const postContact = async (
   }
 
   // If present, update contact's email addresses
-  if (contact.Internet) {
-    contact.Internet.forEach(async (internet: InternetUpdate) => {
+  if (contact.Emails) {
+    contact.Emails.forEach(async (email: EmailUpdate) => {
       try {
         const internetResult = await Axios({
           method: "put",
           url:
-            REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/internets/${internet.RecID}`,
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/emails/${email.id}`,
           headers: createRtApiHeaders(userKey),
-          data: internet,
+          data: email,
         });
         if (internetResult.status !== 200) {
-          return 2;
+          return 3;
         }
       } catch (e) {
-        logger.error("Internet RT API PUT error: " + JSON.stringify(e));
+        logger.error("Email RT API PUT error: " + JSON.stringify(e));
         return 3;
       }
     });
   }
 
   // If present, update contact's phone numbers
-  if (contact.Phone) {
-    contact.Phone.forEach(async (phone: PhoneUpdate) => {
+  if (contact.Phones) {
+    contact.Phones.forEach(async (phone: PhoneUpdate) => {
       try {
         const phoneResult = await Axios({
           method: "put",
           url:
-            REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/phones/${phone.RecID}`,
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/phones/${phone.id}`,
           headers: createRtApiHeaders(userKey),
           data: phone,
         });
         if (phoneResult.status !== 200) {
-          return 2;
+          return 4;
         }
       } catch (e) {
         logger.error("Phone RT API PUT error: " + JSON.stringify(e));
@@ -90,42 +96,75 @@ export const postContact = async (
     });
   }
 
-  if (contact.contactFieldsToDelete){
-    console.log(contact.contactFieldsToDelete)
-    if(contact.contactFieldsToDelete.emailAddresses){
-      for(const internetRecId of contact.contactFieldsToDelete.emailAddresses){
-        const internetResult = await Axios({
-          method: "post",
+  // If present, update contact's url addresses
+  if (contact.Urls) {
+    contact.Urls.forEach(async (url: UrlUpdate) => {
+      try {
+        const urlResult = await Axios({
+          method: "put",
           url:
-            REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/internets/${internetRecId}?Type=email`,
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/urls/${url.id}`,
           headers: createRtApiHeaders(userKey),
+          data: url,
         });
-        console.log(internetResult.status)
+        if (urlResult.status !== 200) {
+          return 5;
+        }
+      } catch (e) {
+        logger.error("Url RT API PUT error: " + JSON.stringify(e));
+        return 5;
       }
-    }
-    if(contact.contactFieldsToDelete.phoneNumbers){
-      for(const phoneRecId of contact.contactFieldsToDelete.phoneNumbers){
-        const phoneResult = await Axios({
-          method: "post",
-          url:
-            REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/phones/${phoneRecId}`,
-          headers: createRtApiHeaders(userKey),
-        });
-        console.log(phoneResult.status)
-      }
-    }
-    if(contact.contactFieldsToDelete.streetAddresses){
-      for(const addressRecId of contact.contactFieldsToDelete.streetAddresses){
+    });
+  }
+
+  if (contact.contactFieldsToDelete) {
+    if (contact.contactFieldsToDelete.addresses) {
+      for (const addressId of contact.contactFieldsToDelete.addresses) {
         const addressResult = await Axios({
-          method: "post",
+          method: "delete",
           url:
-            REDTAIL_API_URL +
-            `/contacts/${contact.ContactRecord.ClientID}/addresses/${addressRecId}`,
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/addresses/${addressId}`,
           headers: createRtApiHeaders(userKey),
         });
-        console.log(addressResult.status)
+        console.log(addressResult.status);
+      }
+    }
+    if (contact.contactFieldsToDelete.emails) {
+      for (const emailId of contact.contactFieldsToDelete.emails) {
+        const emailResult = await Axios({
+          method: "delete",
+          url:
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/emails/${emailId}`,
+          headers: createRtApiHeaders(userKey),
+        });
+        console.log(emailResult.status);
+      }
+    }
+    if (contact.contactFieldsToDelete.phones) {
+      for (const phoneId of contact.contactFieldsToDelete.phones) {
+        const phoneResult = await Axios({
+          method: "delete",
+          url:
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/phones/${phoneId}`,
+          headers: createRtApiHeaders(userKey),
+        });
+        console.log(phoneResult.status);
+      }
+    }
+    if (contact.contactFieldsToDelete.urls) {
+      for (const UrlId of contact.contactFieldsToDelete.urls) {
+        const urlResult = await Axios({
+          method: "delete",
+          url:
+            REDTAIL_TWAPI_URL +
+            `/contacts/${contact.ContactRecord.id}/urls/${UrlId}`,
+          headers: createRtApiHeaders(userKey),
+        });
+        console.log(urlResult.status);
       }
     }
   }
