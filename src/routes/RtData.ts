@@ -21,6 +21,7 @@ import { getServicingAdvisors } from "../rt-api/get-servicing-advisors";
 import { getWritingAdvisors } from "../rt-api/get-writing-advisors";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 import { postContact } from "../rt-api/post-contact";
+import logger from "../shared/Logger";
 
 // Init shared
 const router = Router();
@@ -259,7 +260,7 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    const contact: RedtailContactUpdate = req.body.data.contact;
+    const contact: RedtailContactUpdate = req.body.data.contactUpdate;
     const userKey: string | undefined =
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;

@@ -15,15 +15,19 @@ export interface RedtailContactUpdate {
 
 export interface ContactRecordUpdate {
   id: number;
-  type: string;
-  source_id: number;
-  status_id: number;
-  category_id: number;
+  salutation_id: number;
   first_name: string;
   middle_name: string;
   last_name: string;
-  tax_id: string;
+  nickname: string;
+  gender_id: number;
   dob: string;
+  category_id: number;
+  status_id: number;
+  source_id: number;
+  tax_id: string | null;
+  servicing_advisor_id: number;
+  writing_advisor_id: number;
 }
 
 export interface AddressUpdate {
@@ -33,41 +37,26 @@ export interface AddressUpdate {
   city: string;
   state: string;
   zip: string;
-  country: string;
   address_type: number;
-  custom_type_title: string;
-  description: string;
   is_primary: boolean;
-  is_preferred: boolean;
 }
 
 export interface EmailUpdate {
   id: number;
-  emailable_id: number;
   address: string;
   email_type: number;
-  custom_type_title: string;
-  description: string;
   is_primary: boolean;
-  is_preferred: boolean;
 }
 
 export interface PhoneUpdate {
   id: number;
-  country_code: number;
   number: string;
-  extension: string;
   phone_type: number;
-  speed_dial: string;
-  is_preferred: boolean;
   is_primary: boolean;
-  custom_type_title: string;
-  description: string;
 }
 
 export interface UrlUpdate {
   id: number;
   address: string;
   url_type: number;
-  custom_type_title: string;
 }
