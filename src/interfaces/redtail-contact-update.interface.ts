@@ -31,7 +31,7 @@ export interface ContactRecordUpdate {
 }
 
 export interface AddressUpdate {
-  id: number;
+  id?: number;
   street_address: string;
   secondary_address: string;
   city: string;
@@ -42,21 +42,22 @@ export interface AddressUpdate {
 }
 
 export interface EmailUpdate {
-  id: number;
+  id?: number;
   address: string;
   email_type: number;
   is_primary: boolean;
 }
 
 export interface PhoneUpdate {
-  id: number;
+  id?: number;
+  country_code?: number;
   number: string;
   phone_type: number;
   is_primary: boolean;
 }
 
 export interface UrlUpdate {
-  id: number;
+  id?: number;
   address: string;
   url_type: number;
 }

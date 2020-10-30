@@ -34,11 +34,18 @@ export const postContact = async (
   if (contact.Addresses) {
     contact.Addresses.forEach(async (address: AddressUpdate) => {
       try {
+        const method = address.id === 0 ? "post" : "put";
+        const addressUrl =
+          address.id === 0
+            ? `/contacts/${contact.ContactRecord.id}/addresses`
+            : `/contacts/${contact.ContactRecord.id}/addresses/${address.id}`;
+        if (address.id === 0) {
+          delete address.id;
+        }
+
         const addressResult = await Axios({
-          method: "put",
-          url:
-            REDTAIL_TWAPI_URL +
-            `/contacts/${contact.ContactRecord.id}/addresses/${address.id}`,
+          method,
+          url: REDTAIL_TWAPI_URL + addressUrl,
           headers: createRtApiHeaders(userKey),
           data: address,
         });
@@ -56,11 +63,18 @@ export const postContact = async (
   if (contact.Emails) {
     contact.Emails.forEach(async (email: EmailUpdate) => {
       try {
+        const method = email.id === 0 ? "post" : "put";
+        const emailUrl =
+          email.id === 0
+            ? `/contacts/${contact.ContactRecord.id}/emails`
+            : `/contacts/${contact.ContactRecord.id}/emails/${email.id}`;
+        if (email.id === 0) {
+          delete email.id;
+        }
+
         const emailResult = await Axios({
-          method: "put",
-          url:
-            REDTAIL_TWAPI_URL +
-            `/contacts/${contact.ContactRecord.id}/emails/${email.id}`,
+          method,
+          url: REDTAIL_TWAPI_URL + emailUrl,
           headers: createRtApiHeaders(userKey),
           data: email,
         });
@@ -78,11 +92,20 @@ export const postContact = async (
   if (contact.Phones) {
     contact.Phones.forEach(async (phone: PhoneUpdate) => {
       try {
+        const method = phone.id === 0 ? "post" : "put";
+        const phoneUrl =
+          phone.id === 0
+            ? `/contacts/${contact.ContactRecord.id}/phones`
+            : `/contacts/${contact.ContactRecord.id}/phones/${phone.id}`;
+        // TODO: add country_code to interfaces and form
+        if (phone.id === 0) {
+          delete phone.id;
+          phone.country_code = 1;
+        }
+
         const phoneResult = await Axios({
-          method: "put",
-          url:
-            REDTAIL_TWAPI_URL +
-            `/contacts/${contact.ContactRecord.id}/phones/${phone.id}`,
+          method,
+          url: REDTAIL_TWAPI_URL + phoneUrl,
           headers: createRtApiHeaders(userKey),
           data: phone,
         });
@@ -100,11 +123,18 @@ export const postContact = async (
   if (contact.Urls) {
     contact.Urls.forEach(async (url: UrlUpdate) => {
       try {
+        const method = url.id === 0 ? "post" : "put";
+        const urlUrl =
+          url.id === 0
+            ? `/contacts/${contact.ContactRecord.id}/urls`
+            : `/contacts/${contact.ContactRecord.id}/urls/${url.id}`;
+        if (url.id === 0) {
+          delete url.id;
+        }
+
         const urlResult = await Axios({
-          method: "put",
-          url:
-            REDTAIL_TWAPI_URL +
-            `/contacts/${contact.ContactRecord.id}/urls/${url.id}`,
+          method,
+          url: REDTAIL_TWAPI_URL + urlUrl,
           headers: createRtApiHeaders(userKey),
           data: url,
         });
