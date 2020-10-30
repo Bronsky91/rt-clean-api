@@ -204,7 +204,6 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     servicingAdvisors: [],
     writingAdvisors: [],
     genderTypes: [
-      { id: null, name: null },
       { id: 1, name: "Male" },
       { id: 2, name: "Female" },
       { id: 3, name: "Unknown" },
