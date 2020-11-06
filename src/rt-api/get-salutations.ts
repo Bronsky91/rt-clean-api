@@ -15,7 +15,7 @@ export const getSalutations = async (
     (s: RedtailList) => ({ id: s.id, name: s.name })
   );
 
-  const totalPages = Array(pageOneRes.data.meta.total_pages - 2 + 1)
+  const totalPages = Array(pageOneRes.data.meta.total_pages - 1)
     .fill(0)
     .map((_, idx) => 2 + idx);
   const salutationPromises = totalPages.map(async (page) => {
