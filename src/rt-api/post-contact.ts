@@ -69,7 +69,7 @@ export const postContact = async (
 
   // If present, update contact's street addresses
   if (contact.Addresses) {
-    contact.Addresses.forEach(async (address: AddressUpdate) => {
+    for (const address of contact.Addresses) {
       try {
         const result = await updateContactField(
           userKey,
@@ -85,12 +85,12 @@ export const postContact = async (
         logger.error("Address RT API PUT error: " + JSON.stringify(e));
         return false;
       }
-    });
+    }
   }
 
   // If present, update contact's email addresses
   if (contact.Emails) {
-    contact.Emails.forEach(async (email: EmailUpdate) => {
+    for (const email of contact.Emails) {
       try {
         const result = await updateContactField(
           userKey,
@@ -105,12 +105,12 @@ export const postContact = async (
         logger.error("Email RT API PUT error: " + JSON.stringify(e));
         return false;
       }
-    });
+    }
   }
 
   // If present, update contact's phone numbers
   if (contact.Phones) {
-    contact.Phones.forEach(async (phone: PhoneUpdate) => {
+    for (const phone of contact.Phones) {
       try {
         // TODO: add country_code to interfaces and form
         phone.country_code = Number.isInteger(phone?.country_code)
@@ -129,12 +129,12 @@ export const postContact = async (
         logger.error("Phone RT API PUT error: " + JSON.stringify(e));
         return false;
       }
-    });
+    }
   }
 
   // If present, update contact's url addresses
   if (contact.Urls) {
-    contact.Urls.forEach(async (url: UrlUpdate) => {
+    for (const url of contact.Urls) {
       try {
         const result = await updateContactField(
           userKey,
@@ -149,7 +149,7 @@ export const postContact = async (
         logger.error("Url RT API PUT error: " + JSON.stringify(e));
         return false;
       }
-    });
+    }
   }
 
   // If present, delete any flagged field IDs
