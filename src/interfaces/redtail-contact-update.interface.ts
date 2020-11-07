@@ -1,10 +1,11 @@
 // Used when SENDING data to Redtail
 export interface RedtailContactUpdate {
-  ContactRecord: ContactRecordUpdate;
-  Addresses?: AddressUpdate[] | null;
-  Emails?: EmailUpdate[] | null;
-  Phones?: PhoneUpdate[] | null;
-  Urls?: UrlUpdate[] | null;
+  key?: string;
+  contactRecord: ContactRecordUpdate;
+  addresses?: AddressUpdate[] | null;
+  emails?: EmailUpdate[] | null;
+  phones?: PhoneUpdate[] | null;
+  urls?: UrlUpdate[] | null;
   contactFieldsToDelete: {
     addresses?: number[];
     emails?: number[];
@@ -31,6 +32,7 @@ export interface ContactRecordUpdate {
 }
 
 export interface AddressUpdate {
+  key?: string;
   id?: number;
   street_address: string;
   secondary_address: string;
@@ -42,6 +44,7 @@ export interface AddressUpdate {
 }
 
 export interface EmailUpdate {
+  key?: string;
   id?: number;
   address: string;
   email_type: number;
@@ -49,6 +52,7 @@ export interface EmailUpdate {
 }
 
 export interface PhoneUpdate {
+  key?: string;
   id?: number;
   country_code?: number;
   number: string;
@@ -57,6 +61,7 @@ export interface PhoneUpdate {
 }
 
 export interface UrlUpdate {
+  key?: string;
   id?: number;
   address: string;
   url_type: number;

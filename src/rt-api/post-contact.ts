@@ -22,9 +22,9 @@ export const postContact = async (
   try {
     const result = await Axios({
       method: "put",
-      url: REDTAIL_TWAPI_URL + `/contacts/${contact.ContactRecord.id}`,
+      url: REDTAIL_TWAPI_URL + `/contacts/${contact.contactRecord.id}`,
       headers: createRtApiHeaders(userKey),
-      data: contact.ContactRecord,
+      data: contact.contactRecord,
     });
     if (result.status !== 200) {
       return false;
@@ -35,50 +35,50 @@ export const postContact = async (
   }
 
   // If present, update contact's street addresses
-  if (contact?.Addresses) {
+  if (contact?.addresses) {
     const result = await createOrUpdateContactFields(
       userKey,
-      contact.ContactRecord.id,
-      contact.Addresses,
+      contact.contactRecord.id,
+      contact.addresses,
       contactFieldEndpoints.address
     );
     if (!result) return false;
   }
 
   // If present, update contact's email addresses
-  if (contact.Emails) {
+  if (contact.emails) {
     const result = await createOrUpdateContactFields(
       userKey,
-      contact.ContactRecord.id,
-      contact.Emails,
+      contact.contactRecord.id,
+      contact.emails,
       contactFieldEndpoints.email
     );
     if (!result) return false;
   }
 
   // If present, update contact's phone numbers
-  if (contact.Phones) {
+  if (contact.phones) {
     // TODO: add country_code to interfaces and form, remove below loop
-    for (const phone of contact.Phones) {
+    for (const phone of contact.phones) {
       phone.country_code = Number.isInteger(phone?.country_code)
         ? phone.country_code
         : 1;
     }
     const result = await createOrUpdateContactFields(
       userKey,
-      contact.ContactRecord.id,
-      contact.Phones,
+      contact.contactRecord.id,
+      contact.phones,
       contactFieldEndpoints.phone
     );
     if (!result) return false;
   }
 
   // If present, update contact's url addresses
-  if (contact.Urls) {
+  if (contact.urls) {
     const result = await createOrUpdateContactFields(
       userKey,
-      contact.ContactRecord.id,
-      contact.Urls,
+      contact.contactRecord.id,
+      contact.urls,
       contactFieldEndpoints.url
     );
     if (!result) return false;
@@ -88,7 +88,7 @@ export const postContact = async (
   if (contact.contactFieldsToDelete?.addresses) {
     const result = await deleteContactFields(
       userKey,
-      contact.ContactRecord.id,
+      contact.contactRecord.id,
       contact.contactFieldsToDelete.addresses,
       contactFieldEndpoints.address
     );
@@ -98,7 +98,7 @@ export const postContact = async (
   if (contact.contactFieldsToDelete?.emails) {
     const result = await deleteContactFields(
       userKey,
-      contact.ContactRecord.id,
+      contact.contactRecord.id,
       contact.contactFieldsToDelete.emails,
       contactFieldEndpoints.email
     );
@@ -108,7 +108,7 @@ export const postContact = async (
   if (contact.contactFieldsToDelete?.phones) {
     const result = await deleteContactFields(
       userKey,
-      contact.ContactRecord.id,
+      contact.contactRecord.id,
       contact.contactFieldsToDelete.phones,
       contactFieldEndpoints.phone
     );
@@ -118,7 +118,7 @@ export const postContact = async (
   if (contact.contactFieldsToDelete?.urls) {
     const result = await deleteContactFields(
       userKey,
-      contact.ContactRecord.id,
+      contact.contactRecord.id,
       contact.contactFieldsToDelete.urls,
       contactFieldEndpoints.url
     );

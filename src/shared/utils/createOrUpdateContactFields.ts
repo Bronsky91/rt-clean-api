@@ -18,6 +18,8 @@ export const createOrUpdateContactFields = async (
   endpoint: contactFieldEndpoints
 ): Promise<boolean> => {
   for (const field of fields) {
+    if (field.key) delete field.key;
+
     const isNewField = field?.id === 0 ? true : false;
     try {
       if (isNewField) delete field.id;

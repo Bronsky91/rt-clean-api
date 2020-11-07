@@ -25,3 +25,8 @@ export interface RedtailSettingsData {
   phoneTypes: RedtailType[];
   urlTypes: RedtailType[];
 }
+
+export interface StateAbbr {
+  short: string;
+  long: string;
+}

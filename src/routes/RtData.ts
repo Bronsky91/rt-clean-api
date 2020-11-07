@@ -4,7 +4,7 @@ import UserModel, { IUser } from "../models/User.model";
 import { v4 as uuid } from "uuid";
 import { isTokenAuth } from "../shared/utils/tokenAuth";
 import { getContactById } from "../rt-api/get-contact-by-id";
-import { RedtailContactRec } from "../interfaces/redtail-contact.interface";
+import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
 import {
   ContactListEntry,
   RedtailContactListRec,
