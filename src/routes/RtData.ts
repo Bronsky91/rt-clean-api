@@ -264,8 +264,8 @@ router.post(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const results = await postContact(userKey, contact);
-      if (results == 0) {
+      const result = await postContact(userKey, contact);
+      if (result) {
         res.sendStatus(200);
       } else {
         res.sendStatus(500);
