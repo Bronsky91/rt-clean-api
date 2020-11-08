@@ -1,5 +1,3 @@
-//TODO: REVIEW
-
 export interface RedtailContactListRec {
   contacts: ContactsEntity[];
   meta: Meta;
