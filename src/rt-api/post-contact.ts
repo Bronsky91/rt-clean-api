@@ -18,8 +18,6 @@ export const postContact = async (
   userKey: string,
   contact: RedtailContactUpdate
 ): Promise<boolean> => {
-  console.log("SUBMITTING CONTACT");
-  console.log(contact);
   // Update contact record
   try {
     const result = await Axios({
