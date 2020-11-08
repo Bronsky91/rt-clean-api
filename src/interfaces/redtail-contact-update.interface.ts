@@ -6,12 +6,7 @@ export interface RedtailContactUpdate {
   emails?: EmailUpdate[] | null;
   phones?: PhoneUpdate[] | null;
   urls?: UrlUpdate[] | null;
-  contactFieldsToDelete: {
-    addresses?: number[];
-    emails?: number[];
-    phones?: number[];
-    urls?: number[];
-  };
+  contactFieldsToDelete: ContactFieldsToDelete;
 }
 
 export interface ContactRecordUpdate {
@@ -65,4 +60,8 @@ export interface UrlUpdate {
   id?: number;
   address: string;
   url_type: number;
+}
+
+export interface ContactFieldsToDelete {
+  [key: string]: number[];
 }

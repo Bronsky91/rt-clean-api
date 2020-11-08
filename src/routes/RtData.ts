@@ -259,7 +259,7 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    const contact: RedtailContactUpdate = req.body.data.contactUpdate;
+    const contact: RedtailContactUpdate = req.body.data;
     const userKey: string | undefined =
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;

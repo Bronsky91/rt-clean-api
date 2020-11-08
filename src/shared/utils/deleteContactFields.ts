@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { ContactFieldsToDelete } from "../../interfaces/redtail-contact-update.interface";
 import { contactFieldEndpoints } from "../../rt-api/post-contact";
 import { REDTAIL_TWAPI_URL } from "../constants";
 import logger from "../Logger";
@@ -8,32 +9,31 @@ import { createRtApiHeaders } from "./createRtApiConfig";
 export const deleteContactFields = async (
   userKey: string,
   contactID: number,
-  fieldIDs: number[],
-  endpoint: contactFieldEndpoints
+  contactFieldsToDelete: ContactFieldsToDelete
 ): Promise<boolean> => {
-  for (const id of fieldIDs) {
-    try {
-      const result = await Axios({
-        method: "delete",
-        url: REDTAIL_TWAPI_URL + `/contacts/${contactID}/${endpoint}/${id}`,
-        headers: createRtApiHeaders(userKey),
-      });
+  for (const field in contactFieldsToDelete) {
+    for (const id of contactFieldsToDelete[field]) {
+      try {
+        const result = await Axios({
+          method: "delete",
+          url: REDTAIL_TWAPI_URL + `/contacts/${contactID}/${field}/${id}`,
+          headers: createRtApiHeaders(userKey),
+        });
 
-      if (result.status !== 200) {
+        if (result.status !== 204) {
+          logger.error(
+            `Redtail API HTTP error attempting to delete contact field via endpoint ${REDTAIL_TWAPI_URL}/contacts/${contactID}/${field}/${id}: `
+          );
+          console.log(result);
+          return false;
+        }
+      } catch (error) {
         logger.error(
-          `Redtail API HTTP error attempting to delete contact field via endpoint ${REDTAIL_TWAPI_URL}/contacts/${contactID}/${endpoint}/${id}: ${JSON.stringify(
-            result
-          )}`
+          `EXCEPTION attempting to delete contact field via endpoint ${REDTAIL_TWAPI_URL}/contacts/${contactID}/${field}/${id}: `
         );
+        console.log(error);
         return false;
       }
-    } catch (error) {
-      logger.error(
-        `EXCEPTION attempting to delete contact field via endpoint ${REDTAIL_TWAPI_URL}/contacts/${contactID}/${endpoint}/${id}: ${JSON.stringify(
-          error
-        )}`
-      );
-      return false;
     }
   }
   return true;

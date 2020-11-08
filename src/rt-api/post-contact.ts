@@ -18,6 +18,8 @@ export const postContact = async (
   userKey: string,
   contact: RedtailContactUpdate
 ): Promise<boolean> => {
+  console.log("SUBMITTING CONTACT");
+  console.log(contact);
   // Update contact record
   try {
     const result = await Axios({
@@ -34,96 +36,17 @@ export const postContact = async (
     return false;
   }
 
-  // If present, update contact's street addresses
-  if (contact?.addresses) {
-    const result = await createOrUpdateContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.addresses,
-      contactFieldEndpoints.address
-    );
-    if (!result) return false;
-  }
+  // Update or create addresses, emails, phones, urls
+  const updateResult = await createOrUpdateContactFields(userKey, contact);
+  if (!updateResult) return false;
 
-  // If present, update contact's email addresses
-  if (contact.emails) {
-    const result = await createOrUpdateContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.emails,
-      contactFieldEndpoints.email
-    );
-    if (!result) return false;
-  }
-
-  // If present, update contact's phone numbers
-  if (contact.phones) {
-    // TODO: add country_code to interfaces and form, remove below loop
-    for (const phone of contact.phones) {
-      phone.country_code = Number.isInteger(phone?.country_code)
-        ? phone.country_code
-        : 1;
-    }
-    const result = await createOrUpdateContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.phones,
-      contactFieldEndpoints.phone
-    );
-    if (!result) return false;
-  }
-
-  // If present, update contact's url addresses
-  if (contact.urls) {
-    const result = await createOrUpdateContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.urls,
-      contactFieldEndpoints.url
-    );
-    if (!result) return false;
-  }
-
-  // If present, delete any flagged address IDs
-  if (contact.contactFieldsToDelete?.addresses) {
-    const result = await deleteContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.contactFieldsToDelete.addresses,
-      contactFieldEndpoints.address
-    );
-    if (!result) return false;
-  }
-  // If present, delete any flagged email IDs
-  if (contact.contactFieldsToDelete?.emails) {
-    const result = await deleteContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.contactFieldsToDelete.emails,
-      contactFieldEndpoints.email
-    );
-    if (!result) return false;
-  }
-  // If present, delete any flagged phone IDs
-  if (contact.contactFieldsToDelete?.phones) {
-    const result = await deleteContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.contactFieldsToDelete.phones,
-      contactFieldEndpoints.phone
-    );
-    if (!result) return false;
-  }
-  // If present, delete any flagged url IDs
-  if (contact.contactFieldsToDelete?.urls) {
-    const result = await deleteContactFields(
-      userKey,
-      contact.contactRecord.id,
-      contact.contactFieldsToDelete.urls,
-      contactFieldEndpoints.url
-    );
-    if (!result) return false;
-  }
+  // Delete flagged addresses, emails, phones, urls
+  const deleteResult = await deleteContactFields(
+    userKey,
+    contact.contactRecord.id,
+    contact.contactFieldsToDelete
+  );
+  if (!deleteResult) return false;
 
   return true;
 };
