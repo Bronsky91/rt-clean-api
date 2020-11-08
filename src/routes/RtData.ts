@@ -2,21 +2,26 @@ import { Request, Response, Router } from "express";
 import { createDatabase } from "../rt-data/create-database";
 import UserModel, { IUser } from "../models/User.model";
 import { v4 as uuid } from "uuid";
-import { isTokenAuth } from '../shared/utils/tokenAuth';
-import { getContactById } from '../rt-api/get-contact-by-id';
-import { RedtailContactRec } from '../interfaces/redtail-contact.interface';
-import { ContactListEntry, RedtailContactListRec, RedtailSearchParam } from '../interfaces/redtail-contact-list.interface';
-import { getContactsByPage } from '../rt-api/get-contacts-by-page';
-import { searchContactsByParam } from '../rt-api/search-contact';
-import { RedtailSettingsData } from '../interfaces/redtail-settings.interface';
-import { getStatuses } from '../rt-api/get-statuses';
-import { getCategories } from '../rt-api/get-categories';
-import { getSources } from '../rt-api/get-sources';
-import { getSalutations } from '../rt-api/get-salutations';
-import { getServicingAdvisors } from '../rt-api/get-servicing-advisors';
-import { getWritingAdvisors } from '../rt-api/get-writing-advisors';
-import { RedtailContactUpdate } from '../interfaces/redtail-contact-update.interface';
-import { postContact } from '../rt-api/post-contact';
+import { isTokenAuth } from "../shared/utils/tokenAuth";
+import { getContactById } from "../rt-api/get-contact-by-id";
+import { RedtailContactRec } from "../interfaces/redtail-contact-receive.interface";
+import {
+  ContactListEntry,
+  RedtailContactListRec,
+  RedtailSearchParam,
+} from "../interfaces/redtail-contact-list.interface";
+import { getContactsByPage } from "../rt-api/get-contacts-by-page";
+import { searchContactsByParam } from "../rt-api/search-contact";
+import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
+import { getStatuses } from "../rt-api/get-statuses";
+import { getCategories } from "../rt-api/get-categories";
+import { getSources } from "../rt-api/get-sources";
+import { getSalutations } from "../rt-api/get-salutations";
+import { getServicingAdvisors } from "../rt-api/get-servicing-advisors";
+import { getWritingAdvisors } from "../rt-api/get-writing-advisors";
+import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import { postContact } from "../rt-api/post-contact";
+import logger from "../shared/Logger";
 
 // Init shared
 const router = Router();
@@ -198,30 +203,35 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     salutations: [],
     servicingAdvisors: [],
     writingAdvisors: [],
-    gender: [
-      { id: "Male", name: "Male" },
-      { id: "Female", name: "Female" },
-      { id: "Unknown", name: "Unknown" },
+    genderTypes: [
+      { id: 1, name: "Male" },
+      { id: 2, name: "Female" },
+      { id: 3, name: "Unknown" },
     ],
     addressTypes: [
-      { Description: "Home", TypeID: "H" },
-      { Description: "Mailing", TypeID: "M" },
-      { Description: "Other", TypeID: "O" },
-      { Description: "Work", TypeID: "W" },
+      { id: 1, name: "Home" },
+      { id: 2, name: "Work" },
+      { id: 3, name: "Mailing" },
+      { id: 4, name: "Other" },
     ],
-    internetTypes: [
-      { Description: "Home", TypeID: 1 },
-      { Description: "Work", TypeID: 3 },
-      { Description: "Other", TypeID: 4 },
+    emailTypes: [
+      { id: 1, name: "Home" },
+      { id: 2, name: "Work" },
+      { id: 3, name: "Other" },
+    ],
+    urlTypes: [
+      { id: 1, name: "Home" },
+      { id: 2, name: "Work" },
+      { id: 3, name: "Other" },
     ],
     phoneTypes: [
-      { Description: "Home", TypeID: "HM" },
-      { Description: "Mobile", TypeID: "CL" },
-      { Description: "Other", TypeID: "OT" },
-      { Description: "Direct Dial", TypeID: "DD" },
-      { Description: "Fax", TypeID: "WF" },
-      { Description: "Toll Free", TypeID: "TF" },
-      { Description: "Work", TypeID: "WK" },
+      { id: 1, name: "Home" },
+      { id: 2, name: "Work" },
+      { id: 3, name: "Mobile" },
+      { id: 4, name: "Fax" },
+      { id: 5, name: "Other" },
+      { id: 6, name: "Direct Dial" },
+      { id: 7, name: "Toll Free" },
     ],
   };
 
@@ -249,13 +259,13 @@ router.post(
   isTokenAuth,
   async (req: Request, res: Response) => {
     const user: IUser = req.user as IUser;
-    const contact: RedtailContactUpdate = req.body.data.contact;
+    const contact: RedtailContactUpdate = req.body.data;
     const userKey: string | undefined =
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const results = await postContact(userKey, contact);
-      if (results == 0) {
+      const result = await postContact(userKey, contact);
+      if (result) {
         res.sendStatus(200);
       } else {
         res.sendStatus(500);
