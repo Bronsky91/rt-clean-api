@@ -22,6 +22,7 @@ import { getWritingAdvisors } from "../rt-api/get-writing-advisors";
 import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
 import { postContact } from "../rt-api/post-contact";
 import logger from "../shared/Logger";
+import { preparePhoneNumbers } from "../shared/utils/preparePhoneNumbers";
 
 // Init shared
 const router = Router();
@@ -264,7 +265,8 @@ router.post(
       user.rtUserkey ||
       (await UserModel.findOne({ email: user.email }))?.rtUserkey;
     if (userKey) {
-      const result = await postContact(userKey, contact);
+      const preparedContact = preparePhoneNumbers(contact);
+      const result = await postContact(userKey, preparedContact);
       if (result) {
         res.sendStatus(200);
       } else {
