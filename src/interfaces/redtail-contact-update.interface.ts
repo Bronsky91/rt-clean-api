@@ -11,6 +11,7 @@ export interface RedtailContactUpdate {
 
 export interface ContactRecordUpdate {
   id: number;
+  type: string;
   salutation_id: number;
   first_name: string;
   middle_name: string;
@@ -64,4 +65,12 @@ export interface UrlUpdate {
 
 export interface ContactFieldsToDelete {
   [key: string]: number[];
+}
+
+export enum ContactTypes {
+  Individual = `Individual`,
+  Business = `Business`,
+  Association = `Association`,
+  Trust = `Trust`,
+  Union = `Union`,
 }

@@ -19,7 +19,10 @@ import { getSources } from "../rt-api/get-sources";
 import { getSalutations } from "../rt-api/get-salutations";
 import { getServicingAdvisors } from "../rt-api/get-servicing-advisors";
 import { getWritingAdvisors } from "../rt-api/get-writing-advisors";
-import { RedtailContactUpdate } from "../interfaces/redtail-contact-update.interface";
+import {
+  ContactTypes,
+  RedtailContactUpdate,
+} from "../interfaces/redtail-contact-update.interface";
 import { postContact } from "../rt-api/post-contact";
 import logger from "../shared/Logger";
 import { preparePhoneNumbers } from "../shared/utils/preparePhoneNumbers";
@@ -177,7 +180,13 @@ router.post(
           }
           return true;
         })
-        .map((contact) => ({ id: contact.id, lastName: contact.last_name }));
+        .map((contact) => ({
+          id: contact.id,
+          name:
+            contact.type !== ContactTypes.Individual
+              ? contact.company_name
+              : contact.last_name,
+        }));
 
       res.json(filteredContactList);
     } else {
