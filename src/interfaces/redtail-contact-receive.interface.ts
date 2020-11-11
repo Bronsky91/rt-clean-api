@@ -26,7 +26,7 @@ export interface RedtailContactRec {
   gender_id: number;
   gender: string;
   spouse_name?: null;
-  tax_id?: null;
+  tax_id: string;
   dob: string; //"1995-10-01",
   death_date?: null;
   client_since?: null;
@@ -37,7 +37,7 @@ export interface RedtailContactRec {
   employer_id: number;
   employer?: null;
   designation: string;
-  referred_by?: null;
+  referred_by: string;
   servicing_advisor_id: number;
   servicing_advisor: string;
   writing_advisor_id: number;

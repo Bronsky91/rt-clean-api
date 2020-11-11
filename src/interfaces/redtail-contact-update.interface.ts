@@ -22,7 +22,8 @@ export interface ContactRecordUpdate {
   category_id: number;
   status_id: number;
   source_id: number;
-  tax_id: string | null;
+  tax_id: string;
+  referred_by: string;
   servicing_advisor_id: number;
   writing_advisor_id: number;
 }
