@@ -16,6 +16,7 @@ export interface ContactRecordUpdate {
   first_name: string;
   middle_name: string;
   last_name: string;
+  company_name: string;
   nickname: string;
   gender_id: number;
   dob: string;
@@ -23,6 +24,7 @@ export interface ContactRecordUpdate {
   status_id: number;
   source_id: number;
   tax_id: string;
+  marital_status_id: number;
   referred_by: string;
   servicing_advisor_id: number;
   writing_advisor_id: number;
