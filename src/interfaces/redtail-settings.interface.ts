@@ -17,6 +17,7 @@ export interface RedtailSettingsData {
   category_id: RedtailList[];
   source_id: RedtailList[];
   salutations: RedtailList[];
+  maritalTypes: RedtailType[];
   servicingAdvisors: RedtailList[];
   writingAdvisors: RedtailList[];
   genderTypes: RedtailType[];

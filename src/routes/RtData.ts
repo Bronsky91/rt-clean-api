@@ -211,6 +211,15 @@ router.get("/dropdowns", isTokenAuth, async (req: Request, res: Response) => {
     category_id: [],
     source_id: [],
     salutations: [],
+    maritalTypes: [
+      { id: 1, name: "Single" },
+      { id: 2, name: "Life Partner" },
+      { id: 3, name: "Married" },
+      { id: 4, name: "Separated" },
+      { id: 5, name: "Divorced" },
+      { id: 6, name: "Widowed" },
+      { id: 7, name: "Unknown" },
+    ],
     servicingAdvisors: [],
     writingAdvisors: [],
     genderTypes: [
