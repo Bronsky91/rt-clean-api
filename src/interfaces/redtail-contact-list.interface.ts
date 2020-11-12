@@ -32,7 +32,7 @@ export interface ContactsEntity {
   tax_id?: string | null;
   dob?: null;
   death_date?: null;
-  client_since?: null;
+  client_since?: string;
   client_termination_date?: null;
   marital_status_id?: number | null;
   marital_status?: string | null;

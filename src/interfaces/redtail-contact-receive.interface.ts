@@ -29,7 +29,7 @@ export interface RedtailContactRec {
   tax_id: string;
   dob: string; //"1995-10-01",
   death_date?: null;
-  client_since?: null;
+  client_since?: string;
   client_termination_date?: null;
   marital_status_id: number; //7,
   marital_status: string; //"Unknown",

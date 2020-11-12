@@ -54,6 +54,24 @@ router.post(
   }
 );
 
+/******************************************************************************
+ *     Removes Redtail Userkey from User - "POST /api/users/redtail-auth
+ ******************************************************************************/
+router.get(
+  "/redtail-logout",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+
+    await UserModel.updateOne(
+      { email: user.email },
+      { $unset: { rtUserkey: "" } }
+    ).exec();
+
+    res.status(200).end();
+  }
+);
+
 router.get(
   "/auth",
   passport.authenticate("google", {
