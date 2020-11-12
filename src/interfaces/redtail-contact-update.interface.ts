@@ -21,6 +21,7 @@ export interface ContactRecordUpdate {
   nickname: string;
   gender_id: number;
   dob: string;
+  client_since: string;
   category_id: number;
   status_id: number;
   source_id: number;
