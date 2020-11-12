@@ -12,6 +12,7 @@ export interface RedtailContactUpdate {
 export interface ContactRecordUpdate {
   id: number;
   type: string;
+  updated_at: string;
   salutation_id: number;
   first_name: string;
   middle_name: string;
@@ -53,7 +54,7 @@ export interface EmailUpdate {
 export interface PhoneUpdate {
   key?: string;
   id?: number;
-  country_code?: number;
+  country_code: number;
   number: string;
   phone_type: number;
   is_primary: boolean;
