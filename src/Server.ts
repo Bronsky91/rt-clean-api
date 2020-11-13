@@ -79,15 +79,6 @@ app.get(
   })
 );
 
-app.get(
-  "/.well-known/acme-challenge/9nFX6J_efBS4irgsirpbwRN-5-AWRzrzTFbpP_DyujI",
-  function (req, res) {
-    res.send(
-      "9nFX6J_efBS4irgsirpbwRN-5-AWRzrzTFbpP_DyujI.HE9NHk4vVSn-E82UxtbeaFJ5GyriUWn1VlYnIHIoHsk"
-    );
-  }
-);
-
 // Print API errors
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   logger.error(err.message, err);
