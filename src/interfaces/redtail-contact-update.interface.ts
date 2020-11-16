@@ -18,6 +18,7 @@ export interface ContactRecordUpdate {
   middle_name: string;
   last_name: string;
   company_name: string;
+  job_title: string;
   nickname: string;
   gender_id: number;
   dob: string;
