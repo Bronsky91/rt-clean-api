@@ -8,7 +8,7 @@ import {
 } from "../shared/constants";
 import UserModel, { IUser } from "../models/User.model";
 import { findOrCreateGoogleUser } from "../shared/utils/findOrCreateGoogleUser";
-import { isTokenAuth, signToken } from "../shared/utils/tokenAuth";
+import { isTokenAuth, signToken, logoutToken } from "../shared/utils/tokenAuth";
 import { authRedtail } from "../rt-api/auth";
 import { GoogleUser } from "src/interfaces/google.interface";
 // Init shared
@@ -71,6 +71,18 @@ router.get(
     res.status(200).end();
   }
 );
+
+router.get("/logout", isTokenAuth, async (req: Request, res: Response) => {
+  const user: IUser = req.user as IUser;
+
+  return res
+    .status(200)
+    .cookie("jwt", logoutToken(user), {
+      httpOnly: true,
+      domain: APP_DOMAIN,
+    })
+    .end();
+});
 
 router.get(
   "/auth",

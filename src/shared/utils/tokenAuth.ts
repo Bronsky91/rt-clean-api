@@ -30,6 +30,12 @@ export const signToken = (user: IUser) => {
   });
 };
 
+export const logoutToken = (user: IUser) => {
+  return jwt.sign({ data: user }, JWT_SECRET, {
+    expiresIn: "-10s",
+  });
+};
+
 const verifyToken = (token: string): IUser => {
   const decoded = jwt.verify(token, JWT_SECRET) as any;
   const user: IUser = decoded.data as IUser;
