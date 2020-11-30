@@ -11,6 +11,7 @@ import {
   RedtailSearchParam,
 } from "../interfaces/redtail-contact-list.interface";
 import { getContactsByPage } from "../rt-api/get-contacts-by-page";
+import { deleteContactById } from "../rt-api/delete-contact-by-id";
 import { searchContactsByParam } from "../rt-api/search-contact";
 import { RedtailSettingsData } from "../interfaces/redtail-settings.interface";
 import { getStatuses } from "../rt-api/get-statuses";
@@ -24,7 +25,6 @@ import {
   RedtailContactUpdate,
 } from "../interfaces/redtail-contact-update.interface";
 import { postContact } from "../rt-api/post-contact";
-import logger from "../shared/Logger";
 import { preparePhoneNumbers } from "../shared/utils/preparePhoneNumbers";
 
 // Init shared
@@ -290,6 +290,31 @@ router.post(
       } else {
         res.sendStatus(500);
       }
+    } else {
+      // Redtail Auth Isn't Setup
+      res.sendStatus(401);
+    }
+    res.end();
+  }
+);
+
+/******************************************************************************
+ *          Delete Specific Contact - "POST /api/rt/delete-contact"
+ ******************************************************************************/
+
+router.delete(
+  "/delete-contact",
+  isTokenAuth,
+  async (req: Request, res: Response) => {
+    const user: IUser = req.user as IUser;
+    const id: number = Number(req.query.id);
+    const userKey: string | undefined =
+      user.rtUserkey ||
+      (await UserModel.findOne({ email: user.email }))?.rtUserkey;
+
+    if (userKey) {
+      await deleteContactById(userKey, id);
+      res.sendStatus(200);
     } else {
       // Redtail Auth Isn't Setup
       res.sendStatus(401);
